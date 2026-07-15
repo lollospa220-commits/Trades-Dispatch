@@ -26,8 +26,13 @@ export default function DashboardHeader({
       <div className="mx-auto max-w-6xl px-4 py-3 sm:py-4">
         <div className="flex items-start justify-between gap-3">
           <div className="flex min-w-0 flex-1 items-center gap-3 sm:gap-5">
-            <Logo theme="light" variant="mark" className="shrink-0 sm:hidden" />
-            <Logo theme="light" className="hidden shrink-0 sm:inline-flex" />
+            {/* Wrapper per la visibilità: il Logo ha display proprio che vince su `hidden` */}
+            <span className="shrink-0 sm:hidden">
+              <Logo theme="light" variant="mark" />
+            </span>
+            <span className="hidden shrink-0 sm:block">
+              <Logo theme="light" />
+            </span>
             <div className="min-w-0">
               <h1 className="truncate font-display text-base font-semibold sm:text-lg">{companyName}</h1>
               <p className="truncate text-xs text-white/60">
