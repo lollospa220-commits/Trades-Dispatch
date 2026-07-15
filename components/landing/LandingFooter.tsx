@@ -20,6 +20,12 @@ export default function LandingFooter() {
           <a href="#prezzi" className="text-brand-muted hover:text-brand-ink">
             Prezzi
           </a>
+          <Link href="/privacy" className="text-brand-muted hover:text-brand-ink">
+            Privacy
+          </Link>
+          <Link href="/termini" className="text-brand-muted hover:text-brand-ink">
+            Termini
+          </Link>
         </div>
       </div>
       <div className="border-t border-brand-sand-dark px-4 py-4 text-center text-xs text-brand-muted">

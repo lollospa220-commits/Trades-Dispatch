@@ -1,0 +1,16 @@
+{
+  "name": "Trades Dispatch",
+  "short_name": "TD",
+  "description": "Gestionale interventi per artigiani tecnici",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#F8F6F3",
+  "theme_color": "#0F1C2E",
+  "icons": [
+    {
+      "src": "/brand/logo-mark.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

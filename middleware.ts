@@ -1,3 +1,4 @@
+import { getAuthSecretBytes } from '@/lib/auth-secret';
 import { jwtVerify } from 'jose';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
@@ -9,8 +10,7 @@ export async function middleware(request: NextRequest) {
   }
 
   try {
-    const secret = process.env.AUTH_SECRET || 'dev-only-change-in-production';
-    await jwtVerify(token, new TextEncoder().encode(secret));
+    await jwtVerify(token, getAuthSecretBytes());
     return NextResponse.next();
   } catch {
     const res = NextResponse.redirect(new URL('/login', request.url));

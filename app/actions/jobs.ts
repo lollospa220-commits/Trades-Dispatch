@@ -2,28 +2,19 @@
 
 import { revalidatePath } from 'next/cache';
 import { JobStatus } from '@prisma/client';
-import { getSession } from '@/lib/auth';
+import { sessionOrError } from '@/lib/action-auth';
 import { parseScheduleRome } from '@/lib/parseSchedule';
+import { formatDateRome, formatTimeRome } from '@/lib/dates';
 import { prisma } from '@/lib/prisma';
-import { sendTechnicianEnRouteSms } from '@/lib/notifications';
+import {
+  sendTechnicianAssignedSms,
+  sendTechnicianEnRouteSms,
+} from '@/lib/notifications';
 
 export type ActionResult = { ok: true } | { ok: false; error: string };
 export type CreateJobResult = ActionResult;
 
 const VALID_STATUSES: JobStatus[] = ['SCHEDULED', 'IN_PROGRESS', 'COMPLETED'];
-
-async function sessionOrError(): Promise<
-  | { ok: true; companyId: string; accountType: 'COMPANY' | 'SOLO' }
-  | { ok: false; error: string }
-> {
-  const session = await getSession();
-  if (!session) return { ok: false, error: 'Sessione scaduta. Effettua di nuovo il login.' };
-  return {
-    ok: true,
-    companyId: session.companyId,
-    accountType: session.accountType,
-  };
-}
 
 async function soloTechnicianId(companyId: string): Promise<string | null> {
   const tech = await prisma.technician.findFirst({
@@ -41,10 +32,6 @@ async function jobInCompany(jobId: string, companyId: string) {
   });
 }
 
-/**
- * Crea un nuovo intervento per l'azienda autenticata.
- * Supporta cliente esistente (customerId) o nuovo cliente inline.
- */
 export async function createJob(
   _prev: CreateJobResult | null,
   formData: FormData,
@@ -77,12 +64,7 @@ export async function createJob(
       if (!name) return { ok: false, error: 'Il nome del nuovo cliente è obbligatorio.' };
 
       const created = await prisma.customer.create({
-        data: {
-          name,
-          phone,
-          address,
-          companyId: auth.companyId,
-        },
+        data: { name, phone, address, companyId: auth.companyId },
       });
       customerId = created.id;
     }
@@ -94,11 +76,12 @@ export async function createJob(
     });
     if (!customer) return { ok: false, error: 'Cliente non valido.' };
 
+    let technician = null;
     if (technicianId) {
-      const tech = await prisma.technician.findFirst({
+      technician = await prisma.technician.findFirst({
         where: { id: technicianId, companyId: auth.companyId, active: true },
       });
-      if (!tech) return { ok: false, error: 'Tecnico non valido.' };
+      if (!technician) return { ok: false, error: 'Tecnico non valido.' };
     }
 
     await prisma.job.create({
@@ -113,6 +96,11 @@ export async function createJob(
       },
     });
 
+    if (technician?.phone) {
+      const label = `${formatDateRome(scheduledAt)} ${formatTimeRome(scheduledAt)}`;
+      await sendTechnicianAssignedSms(technician.phone, technician.name, title, label);
+    }
+
     revalidatePath('/dashboard');
     return { ok: true };
   } catch (err) {
@@ -121,7 +109,52 @@ export async function createJob(
   }
 }
 
-/** Assegna un tecnico a un intervento (solo se appartiene alla stessa azienda). */
+export async function updateJob(formData: FormData): Promise<ActionResult> {
+  const auth = await sessionOrError();
+  if (!auth.ok) return auth;
+
+  const id = String(formData.get('id') || '');
+  const title = String(formData.get('title') || '').trim();
+  const description = String(formData.get('description') || '').trim() || null;
+  const date = String(formData.get('date') || '');
+  const time = String(formData.get('time') || '');
+  const technicianId = String(formData.get('technicianId') || '').trim() || null;
+
+  if (!id || !title) return { ok: false, error: 'Dati non validi.' };
+  const scheduledAt = parseScheduleRome(date, time);
+  if (!scheduledAt) return { ok: false, error: 'Data o ora non validi.' };
+
+  const existing = await prisma.job.findFirst({ where: { id, companyId: auth.companyId } });
+  if (!existing) return { ok: false, error: 'Intervento non trovato.' };
+
+  if (technicianId) {
+    const tech = await prisma.technician.findFirst({
+      where: { id: technicianId, companyId: auth.companyId, active: true },
+    });
+    if (!tech) return { ok: false, error: 'Tecnico non valido.' };
+  }
+
+  await prisma.job.update({
+    where: { id },
+    data: { title, description, scheduledAt, technicianId },
+  });
+
+  revalidatePath('/dashboard');
+  return { ok: true };
+}
+
+export async function deleteJob(id: string): Promise<ActionResult> {
+  const auth = await sessionOrError();
+  if (!auth.ok) return auth;
+
+  const job = await jobInCompany(id, auth.companyId);
+  if (!job) return { ok: false, error: 'Intervento non trovato.' };
+
+  await prisma.job.delete({ where: { id } });
+  revalidatePath('/dashboard');
+  return { ok: true };
+}
+
 export async function assignTechnicianToJob(
   jobId: string,
   technicianId: string,
@@ -134,7 +167,10 @@ export async function assignTechnicianToJob(
   }
 
   try {
-    const job = await jobInCompany(jobId, auth.companyId);
+    const job = await prisma.job.findFirst({
+      where: { id: jobId, companyId: auth.companyId },
+      include: { customer: { select: { name: true } } },
+    });
     if (!job) return { ok: false, error: 'Intervento non trovato.' };
 
     const technician = await prisma.technician.findFirst({
@@ -149,6 +185,11 @@ export async function assignTechnicianToJob(
       data: { technicianId },
     });
 
+    if (technician.phone) {
+      const label = `${formatDateRome(job.scheduledAt)} ${formatTimeRome(job.scheduledAt)}`;
+      await sendTechnicianAssignedSms(technician.phone, technician.name, job.title, label);
+    }
+
     revalidatePath('/dashboard');
     return { ok: true };
   } catch (err) {
@@ -157,10 +198,6 @@ export async function assignTechnicianToJob(
   }
 }
 
-/**
- * Aggiorna lo stato di un Job.
- * Quando passa a IN_PROGRESS → hook SMS in lib/notifications.ts (Twilio-ready).
- */
 export async function updateJobStatus(
   jobId: string,
   status: JobStatus,

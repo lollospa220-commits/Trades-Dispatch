@@ -19,25 +19,61 @@ enum JobStatus {
 }
 
 enum AccountType {
-  COMPANY // azienda con più operatori/tecnici
-  SOLO    // operatore singolo (artigiano autonomo)
+  COMPANY
+  SOLO
+}
+
+enum SubscriptionPlan {
+  SOLO
+  TEAM
+  PRO
 }
 
 model Company {
-  id           String      @id @default(cuid())
-  name         String
-  slug         String      @unique
-  email        String      @unique // login dell'account
-  passwordHash String      @map("password_hash")
-  accountType  AccountType @default(COMPANY) @map("account_type")
-  createdAt    DateTime    @default(now()) @map("created_at")
-  updatedAt    DateTime    @updatedAt @map("updated_at")
+  id                   String           @id @default(cuid())
+  name                 String
+  slug                 String           @unique
+  email                String           @unique
+  passwordHash         String           @map("password_hash")
+  accountType          AccountType      @default(COMPANY) @map("account_type")
+  plan                 SubscriptionPlan @default(SOLO)
+  stripeCustomerId     String?          @map("stripe_customer_id")
+  stripeSubscriptionId String?          @map("stripe_subscription_id")
+  subscriptionStatus   String           @default("trialing") @map("subscription_status")
+  createdAt            DateTime         @default(now()) @map("created_at")
+  updatedAt            DateTime         @updatedAt @map("updated_at")
 
-  technicians Technician[]
-  customers   Customer[]
-  jobs        Job[]
+  technicians          Technician[]
+  customers            Customer[]
+  jobs                 Job[]
+  passwordResetTokens  PasswordResetToken[]
 
   @@map("companies")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  tokenHash String   @map("token_hash")
+  expiresAt DateTime @map("expires_at")
+  companyId String   @map("company_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([tokenHash])
+  @@map("password_reset_tokens")
+}
+
+model LoginAttempt {
+  id        String   @id @default(cuid())
+  email     String
+  ip        String?
+  success   Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([email, createdAt])
+  @@map("login_attempts")
 }
 
 model Technician {
@@ -60,7 +96,7 @@ model Technician {
 model Customer {
   id        String   @id @default(cuid())
   name      String
-  phone     String? // usato per SMS al cliente (Twilio / altro provider)
+  phone     String?
   email     String?
   address   String?
   companyId String   @map("company_id")

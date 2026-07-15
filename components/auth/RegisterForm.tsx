@@ -22,14 +22,17 @@ const ACCOUNT_OPTIONS = [
 
 export default function RegisterForm({
   defaultAccountType,
+  defaultPlan,
 }: {
   defaultAccountType?: 'SOLO' | 'COMPANY';
+  defaultPlan?: string;
 }) {
   const [state, formAction, pending] = useActionState(registerAction, initial);
   const [accountType, setAccountType] = useState<AccountChoice>(defaultAccountType ?? null);
 
   return (
     <form action={formAction} className="brand-card p-4 sm:p-6">
+      {defaultPlan && <input type="hidden" name="plan" value={defaultPlan} />}
       <fieldset>
         <legend className="brand-label">Come lavori?</legend>
         <div className="mt-3 grid gap-3">

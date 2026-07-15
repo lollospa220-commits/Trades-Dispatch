@@ -1,6 +1,8 @@
+import CookieBanner from '@/components/CookieBanner';
 import type { Metadata, Viewport } from 'next';
 import { Plus_Jakarta_Sans, Source_Sans_3 } from 'next/font/google';
 import { BRAND } from '@/lib/brand';
+import { siteUrl } from '@/lib/site';
 import './globals.css';
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -25,6 +27,13 @@ export const metadata: Metadata = {
   description: BRAND.descriptor,
   applicationName: BRAND.name,
   icons: { icon: '/brand/logo-mark.svg' },
+  manifest: '/manifest.json',
+  metadataBase: new URL(siteUrl()),
+  openGraph: {
+    title: BRAND.name,
+    description: BRAND.descriptor,
+    type: 'website',
+  },
 };
 
 export const viewport: Viewport = {
@@ -37,7 +46,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="it" className={`${plusJakarta.variable} ${sourceSans.variable}`}>
-      <body className="antialiased font-sans">{children}</body>
+      <body className="antialiased font-sans">
+        {children}
+        <CookieBanner />
+      </body>
     </html>
   );
 }

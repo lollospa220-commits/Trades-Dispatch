@@ -29,7 +29,7 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
           </p>
         </div>
 
-        <RegisterForm defaultAccountType={defaultPlan} />
+        <RegisterForm defaultAccountType={defaultPlan} defaultPlan={plan} />
 
         <p className="mt-8 text-center text-sm text-brand-muted">
           Hai già un account?{' '}

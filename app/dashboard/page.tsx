@@ -1,44 +1,67 @@
-import Logo from '@/components/brand/Logo';
 import CreateJobForm from '@/components/dashboard/CreateJobForm';
+import AgendaTabs, { type AgendaView } from '@/components/dashboard/AgendaTabs';
+import JobSearch from '@/components/dashboard/JobSearch';
 import JobTable from '@/components/dashboard/JobTable';
-import LogoutButton from '@/components/dashboard/LogoutButton';
+import OnboardingBanner from '@/components/dashboard/OnboardingBanner';
 import { VOICE } from '@/lib/brand';
-import { todayRangeInRome } from '@/lib/dates';
+import { todayRangeInRome, weekRangeInRome } from '@/lib/dates';
 import { getSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
 
 export const dynamic = 'force-dynamic';
 
-export default async function DashboardPage() {
+type PageProps = {
+  searchParams: Promise<{ view?: string; q?: string }>;
+};
+
+function parseView(raw?: string): AgendaView {
+  if (raw === 'week' || raw === 'history') return raw;
+  return 'today';
+}
+
+export default async function DashboardPage({ searchParams }: PageProps) {
   const session = await getSession();
-  if (!session) redirect('/login');
+  if (!session) return null;
+
+  const { view: viewRaw, q } = await searchParams;
+  const view = parseView(viewRaw);
+  const query = (q || '').trim().toLowerCase();
 
   const company = await prisma.company.findUnique({
     where: { id: session.companyId },
-    select: { id: true, name: true, accountType: true },
+    select: { id: true, accountType: true },
   });
+  if (!company) return null;
 
-  if (!company) {
-    return (
-      <main className="mx-auto max-w-6xl px-4 py-8 sm:py-12">
-        <div className="rounded-xl border border-amber-200 bg-amber-50 p-5 text-amber-900 sm:p-6">
-          <h1 className="text-lg font-semibold">Azienda non trovata</h1>
-          <p className="mt-2 text-sm">Esegui il seed o contatta il supporto.</p>
-        </div>
-      </main>
-    );
+  const isSolo = company.accountType === 'SOLO';
+
+  let range: { start: Date; end: Date };
+  if (view === 'week') {
+    range = weekRangeInRome();
+  } else if (view === 'history') {
+    range = { start: new Date(0), end: new Date() };
+  } else {
+    range = todayRangeInRome();
   }
-
-  const { start, end } = todayRangeInRome();
 
   const [jobs, technicians, customers] = await Promise.all([
     prisma.job.findMany({
       where: {
         companyId: company.id,
-        scheduledAt: { gte: start, lte: end },
+        scheduledAt: view === 'history' ? { lt: todayRangeInRome().start } : { gte: range.start, lte: range.end },
+        ...(view === 'history' ? {} : {}),
+        ...(query
+          ? {
+              OR: [
+                { title: { contains: query, mode: 'insensitive' } },
+                { customer: { name: { contains: query, mode: 'insensitive' } } },
+              ],
+            }
+          : {}),
       },
-      orderBy: { scheduledAt: 'asc' },
+      orderBy: { scheduledAt: view === 'history' ? 'desc' : 'asc' },
+      take: view === 'history' ? 50 : undefined,
       include: {
         customer: { select: { name: true, address: true } },
         technician: { select: { id: true, name: true } },
@@ -56,9 +79,6 @@ export default async function DashboardPage() {
     }),
   ]);
 
-  const isSolo = company.accountType === 'SOLO';
-  const accountLabel = isSolo ? 'Operatore singolo' : 'Azienda con team';
-
   const serializedJobs = jobs.map((j) => ({
     id: j.id,
     title: j.title,
@@ -68,73 +88,35 @@ export default async function DashboardPage() {
     technician: j.technician,
   }));
 
-  const romeTodayLong = new Intl.DateTimeFormat('it-IT', {
-    timeZone: 'Europe/Rome',
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  }).format(new Date());
-
-  const romeTodayShort = new Intl.DateTimeFormat('it-IT', {
-    timeZone: 'Europe/Rome',
-    weekday: 'short',
-    day: 'numeric',
-    month: 'short',
-  }).format(new Date());
+  const viewTitles: Record<AgendaView, string> = {
+    today: 'Interventi di oggi',
+    week: 'Interventi della settimana',
+    history: 'Storico interventi',
+  };
 
   return (
-    <main className="min-h-screen bg-brand-sand">
-      <header className="border-b border-brand-sand-dark bg-brand-navy text-white">
-        <div className="mx-auto max-w-6xl px-4 py-3 sm:py-4">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex min-w-0 flex-1 items-center gap-3 sm:gap-5">
-              <Logo theme="light" variant="mark" className="shrink-0 sm:hidden" />
-              <Logo theme="light" className="hidden shrink-0 sm:inline-flex" />
-              <div className="min-w-0">
-                <h1 className="truncate font-display text-base font-semibold sm:text-lg">
-                  {company.name}
-                </h1>
-                <p className="truncate text-xs text-white/60">
-                  <span className="sm:hidden">{accountLabel}</span>
-                  <span className="hidden sm:inline">
-                    {session.email} · {accountLabel}
-                  </span>
-                </p>
-                <p className="truncate text-xs text-white/45 sm:hidden">{session.email}</p>
-              </div>
-            </div>
+    <>
+      <OnboardingBanner
+        hasCustomers={customers.length > 0}
+        hasTechnicians={technicians.length > 0}
+        isSolo={isSolo}
+      />
 
-            <div className="flex shrink-0 flex-col items-end gap-2 sm:flex-row sm:items-center sm:gap-4">
-              <div className="text-right text-sm text-white/70">
-                <p className="hidden font-medium capitalize text-white sm:block">{romeTodayLong}</p>
-                <p className="font-medium capitalize text-white sm:hidden">{romeTodayShort}</p>
-                <p className="text-xs sm:text-sm">
-                  {jobs.length} intervent{jobs.length === 1 ? 'o' : 'i'} oggi
-                </p>
-              </div>
-              <LogoutButton theme="light" />
-            </div>
-          </div>
-        </div>
-      </header>
+      <CreateJobForm customers={customers} technicians={technicians} isSolo={isSolo} />
 
-      <div className="mx-auto max-w-6xl px-4 py-5 safe-bottom sm:py-8">
-        <CreateJobForm
-          customers={customers}
-          technicians={technicians}
-          isSolo={isSolo}
-        />
+      <AgendaTabs view={view} q={q} />
+      <Suspense fallback={null}>
+        <JobSearch />
+      </Suspense>
 
-        <div className="mb-4 sm:mb-6">
-          <h2 className="font-display text-base font-semibold text-brand-navy sm:text-lg">
-            Interventi di oggi
-          </h2>
-          <p className="mt-1 text-sm text-brand-muted">{VOICE.examples.smsStub}</p>
-        </div>
-
-        <JobTable jobs={serializedJobs} technicians={technicians} isSolo={isSolo} />
+      <div className="mb-4 sm:mb-6">
+        <h2 className="font-display text-base font-semibold text-brand-navy sm:text-lg">
+          {viewTitles[view]}
+        </h2>
+        <p className="mt-1 text-sm text-brand-muted">{VOICE.examples.smsStub}</p>
       </div>
-    </main>
+
+      <JobTable jobs={serializedJobs} technicians={technicians} isSolo={isSolo} showActions />
+    </>
   );
 }

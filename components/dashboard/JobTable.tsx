@@ -2,8 +2,9 @@
 
 import { JobStatus } from '@prisma/client';
 import { useTransition } from 'react';
-import { assignTechnicianToJob, updateJobStatus } from '@/app/actions/jobs';
-import { formatTimeRome } from '@/lib/dates';
+import { assignTechnicianToJob, deleteJob, updateJobStatus } from '@/app/actions/jobs';
+import { formatDateRome, formatTimeRome } from '@/lib/dates';
+import Link from 'next/link';
 import { VOICE } from '@/lib/brand';
 
 export type DashboardJob = {
@@ -108,10 +109,12 @@ export default function JobTable({
   jobs,
   technicians,
   isSolo = false,
+  showActions = false,
 }: {
   jobs: DashboardJob[];
   technicians: TechnicianOption[];
   isSolo?: boolean;
+  showActions?: boolean;
 }) {
   const [pending, startTransition] = useTransition();
 
@@ -124,6 +127,13 @@ export default function JobTable({
   const onStatus = (jobId: string, status: JobStatus) => {
     startTransition(async () => {
       await updateJobStatus(jobId, status);
+    });
+  };
+
+  const onDelete = (jobId: string) => {
+    if (!confirm('Eliminare questo intervento?')) return;
+    startTransition(() => {
+      void deleteJob(jobId);
     });
   };
 
@@ -155,6 +165,7 @@ export default function JobTable({
             </div>
 
             <p className="mt-3 text-sm text-brand-ink">{job.title}</p>
+            <p className="mt-1 text-xs text-brand-muted">{formatDateRome(job.scheduledAt)}</p>
 
             {!isSolo && (
               <div className="mt-4">
@@ -181,6 +192,25 @@ export default function JobTable({
                 className="w-full"
               />
             </div>
+
+            {showActions && (
+              <div className="mt-4 flex gap-2">
+                <Link
+                  href={`/dashboard/jobs/${job.id}/edit`}
+                  className="brand-btn-primary flex-1 py-2 text-center text-xs"
+                >
+                  Modifica
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => onDelete(job.id)}
+                  disabled={pending}
+                  className="rounded-lg border border-red-200 px-3 py-2 text-xs font-semibold text-red-600"
+                >
+                  Elimina
+                </button>
+              </div>
+            )}
           </li>
         ))}
       </ul>
@@ -230,13 +260,32 @@ export default function JobTable({
                   <StatusBadge status={job.status} />
                 </td>
                 <td className="px-4 py-3">
-                  <StatusSelect
-                    jobId={job.id}
-                    status={job.status}
-                    pending={pending}
-                    onStatus={onStatus}
-                    className="py-1.5"
-                  />
+                  <div className="flex flex-wrap items-center gap-2">
+                    <StatusSelect
+                      jobId={job.id}
+                      status={job.status}
+                      pending={pending}
+                      onStatus={onStatus}
+                      className="py-1.5"
+                    />
+                    {showActions && (
+                      <>
+                        <Link
+                          href={`/dashboard/jobs/${job.id}/edit`}
+                          className="text-xs font-semibold text-brand-blue hover:underline"
+                        >
+                          Modifica
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => onDelete(job.id)}
+                          className="text-xs font-semibold text-red-600 hover:underline"
+                        >
+                          Elimina
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}

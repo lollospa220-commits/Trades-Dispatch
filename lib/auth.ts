@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import { AccountType } from '@prisma/client';
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
+import { getAuthSecretBytes } from '@/lib/auth-secret';
 
 const COOKIE_NAME = 'td_session';
 
@@ -13,11 +14,7 @@ export type SessionPayload = {
 };
 
 function getSecret(): Uint8Array {
-  const raw = process.env.AUTH_SECRET;
-  if (!raw && process.env.NODE_ENV === 'production') {
-    throw new Error('AUTH_SECRET must be set in production');
-  }
-  return new TextEncoder().encode(raw || 'dev-only-change-in-production');
+  return getAuthSecretBytes();
 }
 
 export async function hashPassword(plain: string): Promise<string> {
