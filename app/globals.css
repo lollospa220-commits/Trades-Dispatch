@@ -20,11 +20,15 @@
 
 @layer base {
   html {
-    @apply bg-brand-sand text-brand-ink;
+    @apply overflow-x-hidden bg-brand-sand text-brand-ink;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
     font-family: var(--font-sans);
+    @apply overflow-x-hidden;
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
   }
 
   h1,
@@ -50,18 +54,19 @@
 }
 
 .brand-input {
-  @apply w-full rounded-lg border border-brand-sand-dark bg-white px-3 py-2.5 text-sm text-brand-ink shadow-sm transition;
+  @apply w-full min-h-11 rounded-lg border border-brand-sand-dark bg-white px-3 py-2.5 text-base text-brand-ink shadow-sm transition;
   @apply focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/20;
+  @apply sm:text-sm;
 }
 
 .brand-btn-primary {
-  @apply rounded-lg bg-brand-blue px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition;
+  @apply inline-flex min-h-11 items-center justify-center rounded-lg bg-brand-blue px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition;
   @apply hover:bg-brand-blue-dark disabled:opacity-60;
 }
 
 .brand-btn-dark {
-  @apply rounded-lg bg-brand-navy px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition;
-  @apply hover:opacity-90 disabled:opacity-60;
+  @apply inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-brand-navy px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition;
+  @apply hover:opacity-90 disabled:opacity-60 sm:w-auto;
 }
 
 .brand-label {
@@ -71,4 +76,12 @@
 /* Landing — immagini e sezioni */
 .landing-image-wrap {
   @apply relative overflow-hidden;
+}
+
+.landing-section {
+  @apply py-14 sm:py-20 lg:py-28;
+}
+
+.safe-bottom {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
 }

@@ -14,18 +14,20 @@ export default function PricingSection() {
   const { pricingIntro } = LANDING;
 
   return (
-    <section id="prezzi" className="scroll-mt-20 bg-brand-sand py-20 sm:py-28">
+    <section id="prezzi" className="landing-section scroll-mt-20 bg-brand-sand">
       <div className="mx-auto max-w-6xl px-4">
         <div className="text-center">
-          <h2 className="font-display text-3xl font-bold text-brand-navy sm:text-4xl">
+          <h2 className="font-display text-2xl font-bold text-brand-navy sm:text-3xl lg:text-4xl">
             {pricingIntro.title}
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-brand-muted">{pricingIntro.subtitle}</p>
 
-          <div className="mx-auto mt-8 inline-flex items-center gap-2 rounded-full border border-brand-teal/30 bg-brand-teal-light px-5 py-2.5 text-sm font-medium text-brand-teal">
-            <span className="font-bold">€{PRICE_ANCHOR.lostJob}</span>
-            <span className="text-brand-teal/80">= un intervento perso</span>
-            <span className="text-brand-muted">·</span>
+          <div className="mx-auto mt-6 flex max-w-xl flex-col items-center gap-2 rounded-2xl border border-brand-teal/30 bg-brand-teal-light px-4 py-3 text-center text-sm font-medium text-brand-teal sm:mt-8 sm:inline-flex sm:max-w-none sm:flex-row sm:rounded-full sm:px-5 sm:py-2.5 sm:text-left">
+            <span>
+              <span className="font-bold">€{PRICE_ANCHOR.lostJob}</span>
+              <span className="text-brand-teal/80"> = un intervento perso</span>
+            </span>
+            <span className="hidden text-brand-muted sm:inline">·</span>
             <span>
               <span className="font-bold">€{PRICING_PLANS[0].price}</span>/mese = meno di €
               {PRICE_ANCHOR.monthlyCoffee} al giorno
@@ -33,7 +35,7 @@ export default function PricingSection() {
           </div>
         </div>
 
-        <div className="mt-14 grid items-stretch gap-6 lg:grid-cols-3">
+        <div className="mt-10 grid items-stretch gap-5 sm:mt-14 sm:gap-6 lg:grid-cols-3">
           {PRICING_PLANS.map((plan) => {
             const img = PLAN_IMAGES[plan.id];
             return (
@@ -41,7 +43,7 @@ export default function PricingSection() {
                 key={plan.id}
                 className={`relative flex flex-col overflow-hidden rounded-2xl border ${
                   plan.highlight
-                    ? 'border-brand-blue bg-white shadow-xl shadow-brand-blue/10 ring-2 ring-brand-blue/20 lg:scale-[1.02]'
+                    ? 'border-brand-blue bg-white shadow-xl shadow-brand-blue/10 ring-2 ring-brand-blue/20 lg:scale-[1.02] lg:shadow-2xl'
                     : 'border-brand-sand-dark bg-white'
                 }`}
               >
@@ -50,7 +52,7 @@ export default function PricingSection() {
                   <div className="absolute inset-0 bg-gradient-to-t from-white via-white/20 to-transparent" />
                 </div>
 
-                <div className="flex flex-1 flex-col p-6 sm:p-8">
+                <div className="flex flex-1 flex-col p-5 sm:p-8">
                   {plan.badge && (
                     <span className="mb-3 inline-flex w-fit rounded-full bg-brand-blue px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
                       {plan.badge}
@@ -61,7 +63,7 @@ export default function PricingSection() {
                   <p className="mt-1 text-sm text-brand-muted">{plan.tagline}</p>
 
                   <div className="mt-5 flex items-baseline gap-1">
-                    <span className="font-display text-5xl font-extrabold tracking-tight text-brand-navy">
+                    <span className="font-display text-4xl font-extrabold tracking-tight text-brand-navy sm:text-5xl">
                       €{plan.price}
                     </span>
                     <span className="text-brand-muted">/{plan.period}</span>

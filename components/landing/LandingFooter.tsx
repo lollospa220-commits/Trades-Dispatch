@@ -5,7 +5,7 @@ import Link from 'next/link';
 export default function LandingFooter() {
   return (
     <footer className="border-t border-brand-sand-dark bg-white">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 safe-bottom sm:flex-row sm:items-center sm:justify-between sm:py-10">
         <div>
           <Logo />
           <p className="mt-2 max-w-xs text-sm text-brand-muted">{BRAND.tagline}</p>

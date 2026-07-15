@@ -29,10 +29,10 @@ export default function RegisterForm({
   const [accountType, setAccountType] = useState<AccountChoice>(defaultAccountType ?? null);
 
   return (
-    <form action={formAction} className="brand-card p-6">
+    <form action={formAction} className="brand-card p-4 sm:p-6">
       <fieldset>
         <legend className="brand-label">Come lavori?</legend>
-        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        <div className="mt-3 grid gap-3">
           {ACCOUNT_OPTIONS.map((opt) => {
             const selected = accountType === opt.value;
             return (
@@ -164,7 +164,7 @@ export default function RegisterForm({
       <button
         type="submit"
         disabled={pending || !accountType}
-        className="brand-btn-primary mt-6 w-full disabled:opacity-50"
+        className="brand-btn-primary mt-6 w-full py-3 disabled:opacity-50"
       >
         {pending ? 'Registrazione…' : 'Crea account'}
       </button>

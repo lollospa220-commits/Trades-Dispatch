@@ -12,7 +12,7 @@ export default function LogoutButton({ theme = 'dark' }: { theme?: 'light' | 'da
     <form action={logoutAction}>
       <button
         type="submit"
-        className={`rounded-lg border px-3 py-1.5 text-sm font-medium shadow-sm transition ${cls}`}
+        className={`min-h-11 rounded-lg border px-4 py-2 text-sm font-medium shadow-sm transition ${cls}`}
       >
         Esci
       </button>

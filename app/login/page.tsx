@@ -10,11 +10,11 @@ export default async function LoginPage() {
   if (session) redirect('/dashboard');
 
   return (
-    <main className="brand-hero-bg flex min-h-screen items-center justify-center px-4 py-12">
+    <main className="brand-hero-bg flex min-h-screen items-center justify-center px-4 py-8 safe-bottom sm:py-12">
       <div className="w-full max-w-md">
-        <div className="mb-8 flex flex-col items-center text-center">
-          <Logo className="mb-6" />
-          <h1 className="font-display text-2xl font-bold text-brand-navy">Accedi alla dashboard</h1>
+        <div className="mb-6 flex flex-col items-center text-center sm:mb-8">
+          <Logo className="mb-5 sm:mb-6" />
+          <h1 className="font-display text-xl font-bold text-brand-navy sm:text-2xl">Accedi alla dashboard</h1>
           <p className="mt-2 max-w-sm text-sm text-brand-muted">{BRAND.descriptor}</p>
         </div>
 
@@ -27,13 +27,18 @@ export default async function LoginPage() {
           </Link>
         </p>
 
-        <p className="mt-4 text-center text-xs text-brand-muted">
-          Demo azienda: <span className="font-mono text-brand-ink">admin@demo-idraulica.it</span> /{' '}
-          <span className="font-mono text-brand-ink">demo1234</span>
-          <br />
-          Demo operatore: <span className="font-mono text-brand-ink">marco@demo-solo.it</span> /{' '}
-          <span className="font-mono text-brand-ink">demo1234</span>
-        </p>
+        <div className="mt-4 space-y-2 text-center text-xs text-brand-muted">
+          <p className="break-all">
+            Demo azienda:{' '}
+            <span className="font-mono text-brand-ink">admin@demo-idraulica.it</span> /{' '}
+            <span className="font-mono text-brand-ink">demo1234</span>
+          </p>
+          <p className="break-all">
+            Demo operatore:{' '}
+            <span className="font-mono text-brand-ink">marco@demo-solo.it</span> /{' '}
+            <span className="font-mono text-brand-ink">demo1234</span>
+          </p>
+        </div>
       </div>
     </main>
   );

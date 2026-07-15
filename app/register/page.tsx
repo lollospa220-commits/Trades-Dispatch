@@ -18,11 +18,11 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
     plan === 'solo' ? 'SOLO' : plan === 'team' || plan === 'pro' ? 'COMPANY' : undefined;
 
   return (
-    <main className="brand-hero-bg flex min-h-screen items-center justify-center px-4 py-12">
+    <main className="brand-hero-bg flex min-h-screen items-center justify-center px-4 py-8 safe-bottom sm:py-12">
       <div className="w-full max-w-lg">
-        <div className="mb-8 flex flex-col items-center text-center">
-          <Logo className="mb-6" />
-          <h1 className="font-display text-2xl font-bold text-brand-navy">Crea il tuo account</h1>
+        <div className="mb-6 flex flex-col items-center text-center sm:mb-8">
+          <Logo className="mb-5 sm:mb-6" />
+          <h1 className="font-display text-xl font-bold text-brand-navy sm:text-2xl">Crea il tuo account</h1>
           <p className="mt-2 max-w-md text-sm text-brand-muted">
             Scegli se lavori da solo o con un team di operatori. Potrai gestire interventi e clienti
             da subito.

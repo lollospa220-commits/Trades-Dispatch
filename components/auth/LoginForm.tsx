@@ -10,7 +10,7 @@ export default function LoginForm() {
   const [state, formAction, pending] = useActionState(loginAction, initial);
 
   return (
-    <form action={formAction} className="brand-card p-6">
+    <form action={formAction} className="brand-card p-4 sm:p-6">
       <label className="block">
         <span className="brand-label">Email</span>
         <input
@@ -41,7 +41,7 @@ export default function LoginForm() {
         </p>
       )}
 
-      <button type="submit" disabled={pending} className="brand-btn-primary mt-6 w-full">
+      <button type="submit" disabled={pending} className="brand-btn-primary mt-6 w-full py-3">
         {pending ? 'Accesso…' : VOICE.examples.ctaLogin}
       </button>
     </form>

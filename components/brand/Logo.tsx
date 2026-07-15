@@ -67,13 +67,13 @@ export default function Logo({ variant = 'full', className = '', theme = 'dark' 
   }
 
   return (
-    <div className={`inline-flex items-center gap-2.5 ${className}`} aria-label={BRAND.name}>
-      <BrandMark className="h-10 w-10 shrink-0" theme={theme} />
-      <div className="text-left leading-tight">
-        <div className={`font-display text-lg font-bold tracking-tight ${textColor}`}>
+    <div className={`inline-flex min-w-0 items-center gap-2 sm:gap-2.5 ${className}`} aria-label={BRAND.name}>
+      <BrandMark className="h-9 w-9 shrink-0 sm:h-10 sm:w-10" theme={theme} />
+      <div className="min-w-0 text-left leading-tight">
+        <div className={`truncate font-display text-base font-bold tracking-tight sm:text-lg ${textColor}`}>
           Trades<span className="text-brand-amber"> Dispatch</span>
         </div>
-        <div className={`text-[10px] font-medium uppercase tracking-widest ${subColor}`}>
+        <div className={`hidden text-[10px] font-medium uppercase tracking-widest sm:block ${subColor}`}>
           {BRAND.tagline}
         </div>
       </div>

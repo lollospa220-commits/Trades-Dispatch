@@ -30,7 +30,7 @@ export default function CreateJobForm({
   }).format(now);
 
   return (
-    <section className="brand-card mb-8 p-5">
+    <section className="brand-card mb-6 p-4 sm:mb-8 sm:p-5">
       <h2 className="font-display text-base font-semibold text-brand-navy">Nuovo intervento</h2>
       <p className="mt-1 text-sm text-brand-muted">
         {isSolo
@@ -38,8 +38,8 @@ export default function CreateJobForm({
           : 'Programma un intervento e assegnalo a un tecnico (opzionale).'}
       </p>
 
-      <form action={formAction} className="mt-4 grid gap-4 lg:grid-cols-2">
-        <label className="block lg:col-span-2">
+      <form action={formAction} className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-2">
+        <label className="block sm:col-span-2">
           <span className="brand-label">
             Titolo intervento *
           </span>
@@ -52,7 +52,7 @@ export default function CreateJobForm({
           />
         </label>
 
-        <label className="block lg:col-span-2">
+        <label className="block sm:col-span-2">
           <span className="brand-label">
             Descrizione
           </span>
@@ -108,7 +108,7 @@ export default function CreateJobForm({
           <input type="hidden" name="technicianId" value={technicians[0].id} />
         )}
 
-        <div className="block">
+        <div className="block sm:col-span-2">
           <div className="flex items-center justify-between">
             <span className="brand-label">
               Cliente *
@@ -162,17 +162,17 @@ export default function CreateJobForm({
         </div>
 
         {state && !state.ok && (
-          <p className="lg:col-span-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 ring-1 ring-red-100">
+          <p className="sm:col-span-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 ring-1 ring-red-100">
             {state.error}
           </p>
         )}
         {state?.ok && (
-          <p className="lg:col-span-2 rounded-lg bg-brand-teal-light px-3 py-2 text-sm text-brand-teal ring-1 ring-brand-teal/20">
+          <p className="sm:col-span-2 rounded-lg bg-brand-teal-light px-3 py-2 text-sm text-brand-teal ring-1 ring-brand-teal/20">
             Intervento creato con successo.
           </p>
         )}
 
-        <div className="lg:col-span-2">
+        <div className="sm:col-span-2">
           <button
             type="submit"
             disabled={pending}

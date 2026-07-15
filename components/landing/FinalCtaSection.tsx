@@ -7,8 +7,8 @@ export default function FinalCtaSection() {
   const { finalCta } = LANDING;
 
   return (
-    <section className="relative overflow-hidden bg-white py-20 sm:py-28">
-      <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 lg:grid-cols-2">
+    <section className="landing-section relative overflow-hidden bg-white">
+      <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 sm:gap-12 lg:grid-cols-2">
         <div className="relative order-2 aspect-[16/11] overflow-hidden rounded-3xl shadow-2xl ring-1 ring-brand-sand-dark lg:order-1">
           <LandingImage
             src={LANDING_IMAGES.dispatchStreet.src}
@@ -19,13 +19,13 @@ export default function FinalCtaSection() {
         </div>
 
         <div className="order-1 text-center lg:order-2 lg:text-left">
-          <h2 className="font-display text-3xl font-bold text-brand-navy sm:text-4xl">
+          <h2 className="font-display text-2xl font-bold text-brand-navy sm:text-3xl lg:text-4xl">
             {finalCta.title}
           </h2>
           <p className="mt-4 text-lg text-brand-muted">{finalCta.subtitle}</p>
           <Link
             href="/register"
-            className="brand-btn-primary mt-10 inline-block rounded-xl px-8 py-4 text-base"
+            className="brand-btn-primary mt-8 w-full rounded-xl px-8 py-4 text-base sm:mt-10 sm:w-auto"
           >
             {finalCta.cta}
           </Link>

@@ -6,16 +6,16 @@ export default function SolutionSection() {
   const { solution } = LANDING;
 
   return (
-    <section className="border-y border-brand-sand-dark bg-white py-20 sm:py-28">
+    <section className="landing-section border-y border-brand-sand-dark bg-white">
       <div className="mx-auto max-w-6xl px-4">
         <div className="text-center">
-          <h2 className="font-display text-3xl font-bold text-brand-navy sm:text-4xl">
+          <h2 className="font-display text-2xl font-bold text-brand-navy sm:text-3xl lg:text-4xl">
             {solution.title}
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-lg text-brand-muted">{solution.subtitle}</p>
         </div>
 
-        <div className="mt-14 grid items-center gap-12 lg:grid-cols-5">
+        <div className="mt-10 grid items-center gap-10 sm:mt-14 sm:gap-12 lg:grid-cols-5">
           <div className="relative lg:col-span-2">
             <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-xl ring-1 ring-brand-sand-dark">
               <LandingImage
@@ -33,9 +33,9 @@ export default function SolutionSection() {
             {solution.steps.map((step) => (
               <div
                 key={step.step}
-                className="flex gap-5 rounded-2xl border border-brand-sand-dark bg-brand-sand/50 p-5 transition hover:border-brand-blue/30 hover:bg-white hover:shadow-sm"
+                className="flex gap-4 rounded-2xl border border-brand-sand-dark bg-brand-sand/50 p-4 transition hover:border-brand-blue/30 hover:bg-white hover:shadow-sm sm:gap-5 sm:p-5"
               >
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-brand-navy font-display text-lg font-bold text-brand-amber">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-navy font-display text-base font-bold text-brand-amber sm:h-14 sm:w-14 sm:text-lg">
                   {step.step}
                 </div>
                 <div>

@@ -29,6 +29,81 @@ const STATUS_STYLE: Record<JobStatus, string> = {
   COMPLETED: 'bg-brand-teal-light text-brand-teal ring-brand-teal/30',
 };
 
+function StatusBadge({ status }: { status: JobStatus }) {
+  return (
+    <span
+      className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ring-inset ${STATUS_STYLE[status]}`}
+    >
+      {STATUS_LABEL[status]}
+    </span>
+  );
+}
+
+function StatusSelect({
+  jobId,
+  status,
+  pending,
+  onStatus,
+  className = '',
+}: {
+  jobId: string;
+  status: JobStatus;
+  pending: boolean;
+  onStatus: (jobId: string, status: JobStatus) => void;
+  className?: string;
+}) {
+  return (
+    <select
+      className={`brand-input py-2 ${className}`}
+      value={status}
+      disabled={pending}
+      aria-label="Cambia stato intervento"
+      onChange={(e) => onStatus(jobId, e.target.value as JobStatus)}
+    >
+      <option value="SCHEDULED">Programmato</option>
+      <option value="IN_PROGRESS">In corso</option>
+      <option value="COMPLETED">Completato</option>
+    </select>
+  );
+}
+
+function TechnicianSelect({
+  jobId,
+  technicianId,
+  technicians,
+  pending,
+  disabled,
+  onAssign,
+  className = '',
+}: {
+  jobId: string;
+  technicianId: string;
+  technicians: TechnicianOption[];
+  pending: boolean;
+  disabled: boolean;
+  onAssign: (jobId: string, technicianId: string) => void;
+  className?: string;
+}) {
+  return (
+    <select
+      className={`brand-input py-2 ${className}`}
+      value={technicianId}
+      disabled={pending || disabled}
+      aria-label="Assegna tecnico"
+      onChange={(e) => {
+        if (e.target.value) onAssign(jobId, e.target.value);
+      }}
+    >
+      <option value="">— Assegna —</option>
+      {technicians.map((t) => (
+        <option key={t.id} value={t.id}>
+          {t.name}
+        </option>
+      ))}
+    </select>
+  );
+}
+
 export default function JobTable({
   jobs,
   technicians,
@@ -54,7 +129,7 @@ export default function JobTable({
 
   if (jobs.length === 0) {
     return (
-      <div className="brand-card border-dashed px-6 py-16 text-center">
+      <div className="brand-card border-dashed px-4 py-12 text-center sm:px-6 sm:py-16">
         <p className="text-sm font-medium text-brand-muted">{VOICE.examples.emptyState}</p>
       </div>
     );
@@ -62,7 +137,56 @@ export default function JobTable({
 
   return (
     <div className="brand-card overflow-hidden p-0">
-      <div className="overflow-x-auto">
+      {/* Mobile: card layout */}
+      <ul className="divide-y divide-brand-sand-dark md:hidden">
+        {jobs.map((job) => (
+          <li key={job.id} className="p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="font-display text-lg font-bold text-brand-navy">
+                  {formatTimeRome(job.scheduledAt)}
+                </p>
+                <p className="mt-1 font-medium text-brand-ink">{job.customer.name}</p>
+                {job.customer.address && (
+                  <p className="mt-0.5 text-xs text-brand-muted">{job.customer.address}</p>
+                )}
+              </div>
+              <StatusBadge status={job.status} />
+            </div>
+
+            <p className="mt-3 text-sm text-brand-ink">{job.title}</p>
+
+            {!isSolo && (
+              <div className="mt-4">
+                <p className="brand-label mb-1.5">Tecnico</p>
+                <TechnicianSelect
+                  jobId={job.id}
+                  technicianId={job.technician?.id ?? ''}
+                  technicians={technicians}
+                  pending={pending}
+                  disabled={job.status === 'COMPLETED'}
+                  onAssign={onAssign}
+                  className="w-full"
+                />
+              </div>
+            )}
+
+            <div className="mt-4">
+              <p className="brand-label mb-1.5">Stato</p>
+              <StatusSelect
+                jobId={job.id}
+                status={job.status}
+                pending={pending}
+                onStatus={onStatus}
+                className="w-full"
+              />
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      {/* Desktop: table */}
+      <div className="hidden overflow-x-auto md:block">
         <table className="min-w-full divide-y divide-brand-sand-dark text-left text-sm">
           <thead className="bg-brand-sand">
             <tr>
@@ -91,47 +215,35 @@ export default function JobTable({
                 <td className="px-4 py-3 text-brand-ink">{job.title}</td>
                 {!isSolo && (
                   <td className="px-4 py-3">
-                    <select
-                      className="brand-input min-w-[140px] py-1.5"
-                      value={job.technician?.id ?? ''}
-                      disabled={pending || job.status === 'COMPLETED'}
-                      onChange={(e) => {
-                        if (e.target.value) onAssign(job.id, e.target.value);
-                      }}
-                    >
-                      <option value="">— Assegna —</option>
-                      {technicians.map((t) => (
-                        <option key={t.id} value={t.id}>
-                          {t.name}
-                        </option>
-                      ))}
-                    </select>
+                    <TechnicianSelect
+                      jobId={job.id}
+                      technicianId={job.technician?.id ?? ''}
+                      technicians={technicians}
+                      pending={pending}
+                      disabled={job.status === 'COMPLETED'}
+                      onAssign={onAssign}
+                      className="min-w-[140px] py-1.5"
+                    />
                   </td>
                 )}
                 <td className="px-4 py-3">
-                  <span
-                    className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ring-inset ${STATUS_STYLE[job.status]}`}
-                  >
-                    {STATUS_LABEL[job.status]}
-                  </span>
+                  <StatusBadge status={job.status} />
                 </td>
                 <td className="px-4 py-3">
-                  <select
-                    className="brand-input py-1.5"
-                    value={job.status}
-                    disabled={pending}
-                    onChange={(e) => onStatus(job.id, e.target.value as JobStatus)}
-                  >
-                    <option value="SCHEDULED">Programmato</option>
-                    <option value="IN_PROGRESS">In corso</option>
-                    <option value="COMPLETED">Completato</option>
-                  </select>
+                  <StatusSelect
+                    jobId={job.id}
+                    status={job.status}
+                    pending={pending}
+                    onStatus={onStatus}
+                    className="py-1.5"
+                  />
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
       {pending && (
         <div className="border-t border-brand-sand-dark bg-brand-sand px-4 py-2 text-xs text-brand-muted">
           Aggiornamento in corso…

@@ -6,14 +6,14 @@ export default function AudienceSection() {
   const { audience } = LANDING;
 
   return (
-    <section className="bg-brand-navy py-20 text-white sm:py-28">
+    <section className="landing-section bg-brand-navy text-white">
       <div className="mx-auto max-w-6xl px-4">
         <div className="max-w-2xl">
-          <h2 className="font-display text-3xl font-bold sm:text-4xl">{audience.title}</h2>
+          <h2 className="font-display text-2xl font-bold sm:text-3xl lg:text-4xl">{audience.title}</h2>
           <p className="mt-4 text-lg text-white/65">{audience.subtitle}</p>
         </div>
 
-        <div className="mt-14 grid gap-6 md:grid-cols-3">
+        <div className="mt-10 grid gap-4 sm:mt-14 sm:gap-6 md:grid-cols-3">
           {audience.segments.map((seg, i) => (
             <article
               key={seg.title}

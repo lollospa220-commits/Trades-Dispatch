@@ -21,8 +21,8 @@ export default async function DashboardPage() {
 
   if (!company) {
     return (
-      <main className="mx-auto max-w-6xl px-4 py-12">
-        <div className="rounded-xl border border-amber-200 bg-amber-50 p-6 text-amber-900">
+      <main className="mx-auto max-w-6xl px-4 py-8 sm:py-12">
+        <div className="rounded-xl border border-amber-200 bg-amber-50 p-5 text-amber-900 sm:p-6">
           <h1 className="text-lg font-semibold">Azienda non trovata</h1>
           <p className="mt-2 text-sm">Esegui il seed o contatta il supporto.</p>
         </div>
@@ -68,7 +68,7 @@ export default async function DashboardPage() {
     technician: j.technician,
   }));
 
-  const romeToday = new Intl.DateTimeFormat('it-IT', {
+  const romeTodayLong = new Intl.DateTimeFormat('it-IT', {
     timeZone: 'Europe/Rome',
     weekday: 'long',
     day: 'numeric',
@@ -76,40 +76,61 @@ export default async function DashboardPage() {
     year: 'numeric',
   }).format(new Date());
 
+  const romeTodayShort = new Intl.DateTimeFormat('it-IT', {
+    timeZone: 'Europe/Rome',
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+  }).format(new Date());
+
   return (
     <main className="min-h-screen bg-brand-sand">
       <header className="border-b border-brand-sand-dark bg-brand-navy text-white">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-4">
-          <div className="flex flex-wrap items-center gap-5">
-            <Logo theme="light" />
-            <div className="hidden h-8 w-px bg-white/15 sm:block" aria-hidden />
-            <div>
-              <h1 className="font-display text-lg font-semibold">{company.name}</h1>
-              <p className="text-xs text-white/60">
-                {session.email} · {accountLabel}
-              </p>
+        <div className="mx-auto max-w-6xl px-4 py-3 sm:py-4">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex min-w-0 flex-1 items-center gap-3 sm:gap-5">
+              <Logo theme="light" variant="mark" className="shrink-0 sm:hidden" />
+              <Logo theme="light" className="hidden shrink-0 sm:inline-flex" />
+              <div className="min-w-0">
+                <h1 className="truncate font-display text-base font-semibold sm:text-lg">
+                  {company.name}
+                </h1>
+                <p className="truncate text-xs text-white/60">
+                  <span className="sm:hidden">{accountLabel}</span>
+                  <span className="hidden sm:inline">
+                    {session.email} · {accountLabel}
+                  </span>
+                </p>
+                <p className="truncate text-xs text-white/45 sm:hidden">{session.email}</p>
+              </div>
             </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="text-right text-sm text-white/70">
-              <p className="font-medium capitalize text-white">{romeToday}</p>
-              <p>{jobs.length} interventi oggi</p>
+
+            <div className="flex shrink-0 flex-col items-end gap-2 sm:flex-row sm:items-center sm:gap-4">
+              <div className="text-right text-sm text-white/70">
+                <p className="hidden font-medium capitalize text-white sm:block">{romeTodayLong}</p>
+                <p className="font-medium capitalize text-white sm:hidden">{romeTodayShort}</p>
+                <p className="text-xs sm:text-sm">
+                  {jobs.length} intervent{jobs.length === 1 ? 'o' : 'i'} oggi
+                </p>
+              </div>
+              <LogoutButton theme="light" />
             </div>
-            <LogoutButton theme="light" />
           </div>
         </div>
       </header>
 
-      <div className="mx-auto max-w-6xl px-4 py-8">
+      <div className="mx-auto max-w-6xl px-4 py-5 safe-bottom sm:py-8">
         <CreateJobForm
           customers={customers}
           technicians={technicians}
           isSolo={isSolo}
         />
 
-        <div className="mb-6">
-          <h2 className="font-display text-lg font-semibold text-brand-navy">Interventi di oggi</h2>
-          <p className="text-sm text-brand-muted">{VOICE.examples.smsStub}</p>
+        <div className="mb-4 sm:mb-6">
+          <h2 className="font-display text-base font-semibold text-brand-navy sm:text-lg">
+            Interventi di oggi
+          </h2>
+          <p className="mt-1 text-sm text-brand-muted">{VOICE.examples.smsStub}</p>
         </div>
 
         <JobTable jobs={serializedJobs} technicians={technicians} isSolo={isSolo} />
