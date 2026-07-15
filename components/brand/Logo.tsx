@@ -1,56 +1,25 @@
+import Image from 'next/image';
 import { BRAND } from '@/lib/brand';
 
 type LogoProps = {
   /** 'full' = mark + wordmark, 'mark' = solo icona */
   variant?: 'full' | 'mark';
   className?: string;
-  /** 'light' su sfondo scuro, 'dark' su sfondo chiaro */
+  /** Mantenuto per compatibilità API; il mark ha sfondo proprio */
   theme?: 'light' | 'dark';
 };
 
-/** Logo vettoriale Opi: badge percorso (freccia rotta) + accento campo (amber). */
-export function BrandMark({ className, theme = 'dark' }: { className?: string; theme?: 'light' | 'dark' }) {
-  const navy = theme === 'light' ? '#FFFFFF' : '#0F1C2E';
-  const blue = theme === 'light' ? '#FFFFFF' : '#1E4D8C';
-  const amber = '#E87B35';
-
+export function BrandMark({ className = '' }: { className?: string; theme?: 'light' | 'dark' }) {
   return (
-    <svg
-      viewBox="0 0 40 40"
-      width="40"
-      height="40"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      style={{ width: '2.5rem', height: '2.5rem', flexShrink: 0 }}
+    <Image
+      src="/brand/app-icon.png"
+      alt=""
+      width={1024}
+      height={1024}
+      className={`shrink-0 object-contain ${className}`}
       aria-hidden
-    >
-      <rect x="2" y="2" width="36" height="36" rx="10" fill={navy} />
-      <path
-        d="M11 26 L19 18 L24 23 L29 13"
-        stroke={amber}
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle cx="29" cy="13" r="2.5" fill={amber} />
-      <path
-        d="M11 26 L11 30 L15 30"
-        stroke={blue}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        opacity={theme === 'light' ? 0.9 : 1}
-      />
-      <path
-        d="M24 23 L29 28 L29 13"
-        stroke={theme === 'light' ? '#FFFFFF' : '#FFFFFF'}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        opacity="0.35"
-      />
-    </svg>
+      priority
+    />
   );
 }
 
@@ -61,14 +30,14 @@ export default function Logo({ variant = 'full', className = '', theme = 'dark' 
   if (variant === 'mark') {
     return (
       <div className={`inline-flex ${className}`} aria-label={BRAND.name}>
-        <BrandMark className="h-9 w-9" theme={theme} />
+        <BrandMark className="h-9 w-9 sm:h-10 sm:w-10" />
       </div>
     );
   }
 
   return (
     <div className={`inline-flex min-w-0 items-center gap-2 sm:gap-2.5 ${className}`} aria-label={BRAND.name}>
-      <BrandMark className="h-9 w-9 shrink-0 sm:h-10 sm:w-10" theme={theme} />
+      <BrandMark className="h-9 w-9 shrink-0 sm:h-10 sm:w-10" />
       <div className="min-w-0 text-left leading-tight">
         <div className={`truncate font-display text-base font-bold tracking-tight sm:text-lg ${textColor}`}>
           Opifice

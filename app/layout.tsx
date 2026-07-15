@@ -26,7 +26,13 @@ export const metadata: Metadata = {
   },
   description: BRAND.descriptor,
   applicationName: BRAND.name,
-  icons: { icon: '/brand/logo-mark.svg' },
+  icons: {
+    icon: [
+      { url: '/brand/app-icon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/brand/app-icon.png', sizes: '1024x1024', type: 'image/png' },
+    ],
+    apple: '/brand/app-icon-180.png',
+  },
   manifest: '/manifest.json',
   metadataBase: new URL(siteUrl()),
   openGraph: {
