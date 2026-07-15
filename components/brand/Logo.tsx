@@ -17,9 +17,12 @@ export function BrandMark({ className, theme = 'dark' }: { className?: string; t
   return (
     <svg
       viewBox="0 0 40 40"
+      width="40"
+      height="40"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      style={{ width: '2.5rem', height: '2.5rem', flexShrink: 0 }}
       aria-hidden
     >
       <rect x="2" y="2" width="36" height="36" rx="10" fill={navy} />
