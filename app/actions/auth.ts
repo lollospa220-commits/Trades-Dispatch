@@ -1,6 +1,7 @@
 'use server';
 
 import { AccountType } from '@prisma/client';
+import { isRedirectError } from 'next/dist/client/components/redirect-error';
 import { redirect } from 'next/navigation';
 import { createSession, destroySession, hashPassword, verifyPassword } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
@@ -82,10 +83,21 @@ export async function registerAction(
     return { ok: false, error: 'Le password non coincidono.' };
   }
 
-  const existing = await prisma.company.findUnique({
-    where: { email },
-    select: { id: true },
-  });
+  let existing;
+  try {
+    existing = await prisma.company.findUnique({
+      where: { email },
+      select: { id: true },
+    });
+  } catch (err) {
+    console.error('[registerAction] DB lookup:', err);
+    return {
+      ok: false,
+      error:
+        'Database non raggiungibile. Controlla la connessione Supabase e riprova.',
+    };
+  }
+
   if (existing) {
     return { ok: false, error: 'Esiste già un account con questa email.' };
   }
@@ -164,12 +176,13 @@ export async function registerAction(
         accountType: company.accountType,
       });
     }
-
-    redirect('/dashboard');
   } catch (err) {
+    if (isRedirectError(err)) throw err;
     console.error('[registerAction]', err);
     return { ok: false, error: 'Errore durante la registrazione. Riprova.' };
   }
+
+  redirect('/dashboard');
 }
 
 export async function logoutAction(): Promise<void> {

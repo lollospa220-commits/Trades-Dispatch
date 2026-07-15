@@ -46,7 +46,6 @@ export default function RegisterForm() {
                   value={opt.value}
                   required
                   className="sr-only"
-                  checked={selected}
                   onChange={() => setAccountType(opt.value)}
                 />
                 <span className="block font-display text-sm font-semibold text-brand-navy">
