@@ -18,7 +18,8 @@ export function romeLocalToUtc(date: string, time: string): Date | null {
     if (parts.year === y && parts.month === mo && parts.day === d && parts.hour === h && parts.minute === mi) {
       return new Date(utc);
     }
-    utc -= diffMs;
+    // diffMs = locale desiderato - locale mostrato: se il rendering è avanti, l'istante UTC va indietro.
+    utc += diffMs;
   }
 
   return new Date(utc);
