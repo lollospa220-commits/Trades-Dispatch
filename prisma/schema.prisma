@@ -1,0 +1,92 @@
+// Trades Dispatch — schema relazionale multi-tenant (un Company = un abbonato SaaS).
+// Ogni record operativo (technician, customer, job) è scoped su companyId.
+// Database: Supabase PostgreSQL (locale e produzione).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum JobStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+}
+
+model Company {
+  id           String   @id @default(cuid())
+  name         String
+  slug         String   @unique
+  email        String   @unique // login dell'azienda abbonata
+  passwordHash String   @map("password_hash")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  technicians Technician[]
+  customers   Customer[]
+  jobs        Job[]
+
+  @@map("companies")
+}
+
+model Technician {
+  id        String   @id @default(cuid())
+  name      String
+  email     String?
+  phone     String?
+  active    Boolean  @default(true)
+  companyId String   @map("company_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  jobs    Job[]
+
+  @@index([companyId])
+  @@map("technicians")
+}
+
+model Customer {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String? // usato per SMS al cliente (Twilio / altro provider)
+  email     String?
+  address   String?
+  companyId String   @map("company_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  jobs    Job[]
+
+  @@index([companyId])
+  @@map("customers")
+}
+
+model Job {
+  id           String    @id @default(cuid())
+  title        String
+  description  String?
+  status       JobStatus @default(SCHEDULED)
+  scheduledAt  DateTime  @map("scheduled_at")
+  startedAt    DateTime? @map("started_at")
+  completedAt  DateTime? @map("completed_at")
+  companyId    String    @map("company_id")
+  customerId   String    @map("customer_id")
+  technicianId String?   @map("technician_id")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  company    Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  customer   Customer    @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  technician Technician? @relation(fields: [technicianId], references: [id], onDelete: SetNull)
+
+  @@index([companyId, scheduledAt])
+  @@index([technicianId])
+  @@map("jobs")
+}
