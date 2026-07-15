@@ -2,7 +2,7 @@
 
 import { createJob, type CreateJobResult } from '@/app/actions/jobs';
 import { VOICE } from '@/lib/brand';
-import { useActionState, useState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 
 type CustomerOption = { id: string; name: string };
 type TechnicianOption = { id: string; name: string };
@@ -20,6 +20,26 @@ export default function CreateJobForm({
 }) {
   const [state, formAction, pending] = useActionState(createJob, initial);
   const [newCustomer, setNewCustomer] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  // FAB ed empty state puntano a #nuovo-intervento: il pannello si apre da solo.
+  useEffect(() => {
+    const openFromHash = () => {
+      if (window.location.hash === '#nuovo-intervento') setOpen(true);
+    };
+    openFromHash();
+    window.addEventListener('hashchange', openFromHash);
+    return () => window.removeEventListener('hashchange', openFromHash);
+  }, []);
+
+  const toggle = () => {
+    setOpen((v) => {
+      if (v && window.location.hash === '#nuovo-intervento') {
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+      return !v;
+    });
+  };
 
   const now = new Date();
   const defaultDate = new Intl.DateTimeFormat('en-CA', {
@@ -31,14 +51,34 @@ export default function CreateJobForm({
 
   return (
     <section id="nuovo-intervento" className="brand-card mb-6 scroll-mt-24 p-4 sm:mb-8 sm:p-5">
-      <h2 className="font-display text-base font-semibold text-brand-navy">Nuovo intervento</h2>
-      <p className="mt-1 text-sm text-brand-muted">
-        {isSolo
-          ? 'Programma un intervento: verrà assegnato automaticamente a te.'
-          : 'Programma un intervento e assegnalo a un tecnico (opzionale).'}
-      </p>
+      <button
+        type="button"
+        onClick={toggle}
+        aria-expanded={open}
+        className="flex min-h-11 w-full items-center justify-between gap-3 text-left"
+      >
+        <span>
+          <span className="font-display block text-base font-semibold text-brand-navy">
+            ＋ Nuovo intervento
+          </span>
+          <span className="mt-0.5 block text-sm text-brand-muted">
+            {isSolo
+              ? 'Programma un intervento: verrà assegnato automaticamente a te.'
+              : 'Programma un intervento e assegnalo a un tecnico (opzionale).'}
+          </span>
+        </span>
+        <span
+          aria-hidden
+          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-sand text-brand-navy transition-transform ${open ? 'rotate-45' : ''}`}
+        >
+          +
+        </span>
+      </button>
 
-      <form action={formAction} className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-2">
+      <form
+        action={formAction}
+        className={`mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-2 ${open ? '' : 'hidden'}`}
+      >
         <label className="block sm:col-span-2">
           <span className="brand-label">
             Titolo intervento *
