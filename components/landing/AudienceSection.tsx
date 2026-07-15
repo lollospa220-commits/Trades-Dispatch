@@ -1,4 +1,6 @@
+import LandingImage from '@/components/landing/LandingImage';
 import { LANDING } from '@/lib/landing';
+import { AUDIENCE_IMAGES } from '@/lib/landing-images';
 
 export default function AudienceSection() {
   const { audience } = LANDING;
@@ -12,14 +14,24 @@ export default function AudienceSection() {
         </div>
 
         <div className="mt-14 grid gap-6 md:grid-cols-3">
-          {audience.segments.map((seg) => (
-            <div
+          {audience.segments.map((seg, i) => (
+            <article
               key={seg.title}
-              className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm"
+              className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm"
             >
-              <h3 className="font-display text-lg font-bold text-brand-amber">{seg.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-white/70">{seg.text}</p>
-            </div>
+              <div className="relative aspect-[16/10]">
+                <LandingImage
+                  src={AUDIENCE_IMAGES[i].src}
+                  alt={AUDIENCE_IMAGES[i].alt}
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/20 to-transparent" />
+                <h3 className="font-display absolute bottom-4 left-4 text-lg font-bold text-brand-amber">
+                  {seg.title}
+                </h3>
+              </div>
+              <p className="p-5 text-sm leading-relaxed text-white/70">{seg.text}</p>
+            </article>
           ))}
         </div>
       </div>

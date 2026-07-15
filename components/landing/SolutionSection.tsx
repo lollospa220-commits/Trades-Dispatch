@@ -1,4 +1,6 @@
+import LandingImage from '@/components/landing/LandingImage';
 import { LANDING } from '@/lib/landing';
+import { LANDING_IMAGES } from '@/lib/landing-images';
 
 export default function SolutionSection() {
   const { solution } = LANDING;
@@ -13,22 +15,36 @@ export default function SolutionSection() {
           <p className="mx-auto mt-4 max-w-xl text-lg text-brand-muted">{solution.subtitle}</p>
         </div>
 
-        <div className="mt-14 grid gap-8 md:grid-cols-3">
-          {solution.steps.map((step, i) => (
-            <div key={step.step} className="relative text-center md:text-left">
-              {i < solution.steps.length - 1 && (
-                <div
-                  className="absolute left-1/2 top-8 hidden h-px w-full bg-brand-sand-dark md:block"
-                  aria-hidden
-                />
-              )}
-              <div className="relative mx-auto inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-navy font-display text-xl font-bold text-brand-amber md:mx-0">
-                {step.step}
-              </div>
-              <h3 className="font-display mt-6 text-xl font-bold text-brand-navy">{step.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-brand-muted">{step.text}</p>
+        <div className="mt-14 grid items-center gap-12 lg:grid-cols-5">
+          <div className="relative lg:col-span-2">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-xl ring-1 ring-brand-sand-dark">
+              <LandingImage
+                src={LANDING_IMAGES.electrician.src}
+                alt={LANDING_IMAGES.electrician.alt}
+                sizes="(max-width: 1024px) 100vw, 400px"
+              />
             </div>
-          ))}
+            <div className="absolute -bottom-4 left-4 right-4 rounded-xl bg-brand-teal-light px-4 py-3 text-center text-sm font-semibold text-brand-teal shadow-md ring-1 ring-brand-teal/20">
+              SMS inviato · Cliente avvisato
+            </div>
+          </div>
+
+          <div className="space-y-6 lg:col-span-3">
+            {solution.steps.map((step) => (
+              <div
+                key={step.step}
+                className="flex gap-5 rounded-2xl border border-brand-sand-dark bg-brand-sand/50 p-5 transition hover:border-brand-blue/30 hover:bg-white hover:shadow-sm"
+              >
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-brand-navy font-display text-lg font-bold text-brand-amber">
+                  {step.step}
+                </div>
+                <div>
+                  <h3 className="font-display text-xl font-bold text-brand-navy">{step.title}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-brand-muted">{step.text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

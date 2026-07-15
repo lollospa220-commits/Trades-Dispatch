@@ -67,3 +67,8 @@
 .brand-label {
   @apply text-xs font-semibold uppercase tracking-wide text-brand-muted;
 }
+
+/* Landing — immagini e sezioni */
+.landing-image-wrap {
+  @apply relative overflow-hidden;
+}

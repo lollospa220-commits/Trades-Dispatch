@@ -3,6 +3,7 @@ import FinalCtaSection from '@/components/landing/FinalCtaSection';
 import HeroSection from '@/components/landing/HeroSection';
 import LandingFooter from '@/components/landing/LandingFooter';
 import LandingNav from '@/components/landing/LandingNav';
+import OperatorsGallery from '@/components/landing/OperatorsGallery';
 import PricingSection from '@/components/landing/PricingSection';
 import ProblemsSection from '@/components/landing/ProblemsSection';
 import SolutionSection from '@/components/landing/SolutionSection';
@@ -26,6 +27,7 @@ export default async function HomePage() {
       <LandingNav />
       <main>
         <HeroSection />
+        <OperatorsGallery />
         <ProblemsSection />
         <SolutionSection />
         <AudienceSection />
