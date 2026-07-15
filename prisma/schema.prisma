@@ -1,4 +1,4 @@
-// Trades Dispatch — schema relazionale multi-tenant (un Company = un abbonato SaaS).
+// Opifice — schema relazionale multi-tenant (un Company = un abbonato SaaS).
 // Ogni record operativo (technician, customer, job) è scoped su companyId.
 // Database: Supabase PostgreSQL (locale e produzione).
 

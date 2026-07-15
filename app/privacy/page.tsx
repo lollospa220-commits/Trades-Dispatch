@@ -8,7 +8,7 @@ export default function PrivacyPage() {
       <h1 className="font-display text-2xl font-bold text-brand-navy">Privacy Policy</h1>
       <div className="prose prose-sm mt-6 max-w-none text-brand-ink">
         <p>
-          Trades Dispatch tratta i dati necessari per erogare il servizio: account azienda, clienti,
+          Opifice tratta i dati necessari per erogare il servizio: account azienda, clienti,
           interventi e numeri di telefono per notifiche SMS.
         </p>
         <p>

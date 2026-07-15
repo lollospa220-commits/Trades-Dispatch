@@ -1,6 +1,6 @@
 {
-  "name": "Trades Dispatch",
-  "short_name": "TD",
+  "name": "Opifice",
+  "short_name": "Opi",
   "description": "Gestionale interventi per artigiani tecnici",
   "start_url": "/dashboard",
   "display": "standalone",

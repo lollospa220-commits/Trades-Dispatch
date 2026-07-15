@@ -158,7 +158,7 @@ export const LANDING = {
   pricingIntro: {
     title: 'Prezzi onesti. Niente sorprese.',
     subtitle:
-      'Un intervento perso costa €150. Trades Dispatch da €20/mese. Piano annuale: 2 mesi gratis.',
+      'Un intervento perso costa €150. Opifice da €20/mese. Piano annuale: 2 mesi gratis.',
   },
 
   finalCta: {

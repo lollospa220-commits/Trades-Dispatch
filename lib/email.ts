@@ -6,7 +6,7 @@ type SendEmailParams = {
 
 export async function sendEmail({ to, subject, html }: SendEmailParams): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.EMAIL_FROM || 'Trades Dispatch <noreply@trades-dispatch.app>';
+  const from = process.env.EMAIL_FROM || 'Opifice <noreply@opifice.it>';
 
   if (!apiKey) {
     console.info('[sendEmail stub]', { to, subject });
@@ -32,7 +32,7 @@ export async function sendEmail({ to, subject, html }: SendEmailParams): Promise
 export async function sendPasswordResetEmail(to: string, resetUrl: string): Promise<void> {
   await sendEmail({
     to,
-    subject: 'Reimposta la password — Trades Dispatch',
+    subject: 'Reimposta la password — Opifice',
     html: `
       <p>Ciao,</p>
       <p>Hai richiesto di reimpostare la password. Clicca il link (valido 1 ora):</p>
@@ -45,7 +45,7 @@ export async function sendPasswordResetEmail(to: string, resetUrl: string): Prom
 export async function sendWelcomeEmail(to: string, companyName: string): Promise<void> {
   await sendEmail({
     to,
-    subject: 'Benvenuto su Trades Dispatch',
+    subject: 'Benvenuto su Opifice',
     html: `
       <p>Ciao ${companyName},</p>
       <p>Account creato. Entra in dashboard e programma il primo intervento.</p>

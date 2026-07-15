@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Deploy Trades Dispatch su Vercel (senza GitHub, da cartella locale)
+# Deploy Opifice su Vercel (senza GitHub, da cartella locale)
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-echo "=== Deploy Vercel — Trades Dispatch ==="
+echo "=== Deploy Vercel — Opifice ==="
 echo ""
 echo "Prima del deploy, in Vercel Dashboard aggiungi queste env vars:"
 echo "  DATABASE_URL  (Supabase pooler, porta 6543)"

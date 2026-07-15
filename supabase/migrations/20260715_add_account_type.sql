@@ -1,4 +1,4 @@
--- Trades Dispatch — tipo account (azienda vs operatore singolo)
+-- Opifice — tipo account (azienda vs operatore singolo)
 
 do $$ begin
   create type "AccountType" as enum ('COMPANY', 'SOLO');

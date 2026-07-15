@@ -65,7 +65,7 @@ export async function GET(
     }
   }
 
-  page.drawText('— Trades Dispatch', { x: 50, y: 40, size: 9, font, color: rgb(0.4, 0.45, 0.5) });
+  page.drawText('— Opifice', { x: 50, y: 40, size: 9, font, color: rgb(0.4, 0.45, 0.5) });
 
   const bytes = await pdf.save();
   return new NextResponse(Buffer.from(bytes), {

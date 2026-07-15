@@ -1,4 +1,4 @@
--- Trades Dispatch — schema iniziale (idempotente).
+-- Opifice — schema iniziale (idempotente).
 -- Esegui in Supabase → SQL Editor, oppure: npx prisma migrate deploy
 
 -- ── Enum ─────────────────────────────────────────────────────────────────────

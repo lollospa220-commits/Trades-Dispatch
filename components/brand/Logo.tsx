@@ -8,7 +8,7 @@ type LogoProps = {
   theme?: 'light' | 'dark';
 };
 
-/** Logo vettoriale TD: badge dispatch (freccia rotta) + accento campo (amber). */
+/** Logo vettoriale Opi: badge percorso (freccia rotta) + accento campo (amber). */
 export function BrandMark({ className, theme = 'dark' }: { className?: string; theme?: 'light' | 'dark' }) {
   const navy = theme === 'light' ? '#FFFFFF' : '#0F1C2E';
   const blue = theme === 'light' ? '#FFFFFF' : '#1E4D8C';
@@ -71,7 +71,7 @@ export default function Logo({ variant = 'full', className = '', theme = 'dark' 
       <BrandMark className="h-9 w-9 shrink-0 sm:h-10 sm:w-10" theme={theme} />
       <div className="min-w-0 text-left leading-tight">
         <div className={`truncate font-display text-base font-bold tracking-tight sm:text-lg ${textColor}`}>
-          Trades<span className="text-brand-amber"> Dispatch</span>
+          Opifice
         </div>
         <div className={`hidden text-[10px] font-medium uppercase tracking-widest sm:block ${subColor}`}>
           {BRAND.tagline}

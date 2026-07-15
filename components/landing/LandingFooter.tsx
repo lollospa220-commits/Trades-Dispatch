@@ -4,7 +4,7 @@ import { whatsappSupportDisplay, whatsappSupportUrl } from '@/lib/support';
 import Link from 'next/link';
 
 export default function LandingFooter() {
-  const waUrl = whatsappSupportUrl('Ciao, vorrei informazioni su Trades Dispatch');
+  const waUrl = whatsappSupportUrl('Ciao, vorrei informazioni su Opifice');
   const waNum = whatsappSupportDisplay();
 
   return (

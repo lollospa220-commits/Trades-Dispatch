@@ -3,7 +3,7 @@ import { whatsappSupportDisplay, whatsappSupportUrl } from '@/lib/support';
 
 export default function FaqSection() {
   const { faq } = LANDING;
-  const waUrl = whatsappSupportUrl('Ciao, ho una domanda su Trades Dispatch');
+  const waUrl = whatsappSupportUrl('Ciao, ho una domanda su Opifice');
   const waNum = whatsappSupportDisplay();
 
   return (

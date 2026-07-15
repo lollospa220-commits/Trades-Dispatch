@@ -6,7 +6,7 @@ export default function OperatorsGallery() {
     <section className="border-y border-brand-sand-dark bg-white py-12 sm:py-20">
       <div className="mx-auto max-w-6xl px-4">
         <p className="text-center text-xs font-semibold uppercase tracking-widest text-brand-muted">
-          Chi usa Trades Dispatch
+          Chi usa Opifice
         </p>
         <h2 className="font-display mt-3 text-balance text-center text-xl font-bold text-brand-navy sm:text-2xl lg:text-3xl">
           Operatori veri. Problemi veri. Soluzione semplice.

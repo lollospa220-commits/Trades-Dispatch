@@ -59,12 +59,12 @@ async function sendSmsFallback(to: string, body: string): Promise<boolean> {
 }
 
 export async function sendTechnicianEnRouteSms(payload: TechnicianEnRoutePayload): Promise<void> {
-  const body = `Ciao ${payload.customerName}, ${payload.technicianName} è in partenza per: ${payload.jobTitle}. — Trades Dispatch`;
+  const body = `Ciao ${payload.customerName}, ${payload.technicianName} è in partenza per: ${payload.jobTitle}. — Opifice`;
   await sendMessage(payload.to, body);
 }
 
 export async function sendJobReminderSms(payload: JobReminderPayload): Promise<void> {
-  const body = `Promemoria: domani alle ${payload.scheduledLabel} — intervento "${payload.jobTitle}". — Trades Dispatch`;
+  const body = `Promemoria: domani alle ${payload.scheduledLabel} — intervento "${payload.jobTitle}". — Opifice`;
   await sendMessage(payload.to, body);
 }
 
@@ -74,6 +74,6 @@ export async function sendTechnicianAssignedSms(
   jobTitle: string,
   scheduledLabel: string,
 ): Promise<void> {
-  const body = `${technicianName}, nuovo intervento: ${jobTitle} — ${scheduledLabel}. — Trades Dispatch`;
+  const body = `${technicianName}, nuovo intervento: ${jobTitle} — ${scheduledLabel}. — Opifice`;
   await sendMessage(to, body);
 }

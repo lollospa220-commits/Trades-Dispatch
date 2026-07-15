@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Setup Supabase per Trades Dispatch
+# Setup Supabase per Opifice
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-echo "=== Trades Dispatch → Supabase ==="
+echo "=== Opifice → Supabase ==="
 echo ""
 echo "1. Crea un progetto su https://supabase.com/dashboard"
 echo "2. Vai in Project Settings → Database → Connection string"

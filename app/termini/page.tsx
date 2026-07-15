@@ -8,7 +8,7 @@ export default function TerminiPage() {
       <h1 className="font-display text-2xl font-bold text-brand-navy">Termini di servizio</h1>
       <div className="prose prose-sm mt-6 max-w-none text-brand-ink">
         <p>
-          Trades Dispatch è un software gestionale in abbonamento. L&apos;utente è responsabile dei
+          Opifice è un software gestionale in abbonamento. L&apos;utente è responsabile dei
           dati inseriti (clienti, interventi) e dell&apos;uso delle notifiche SMS nel rispetto delle
           norme vigenti.
         </p>
