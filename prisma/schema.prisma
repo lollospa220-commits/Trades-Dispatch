@@ -18,14 +18,20 @@ enum JobStatus {
   COMPLETED
 }
 
+enum AccountType {
+  COMPANY // azienda con più operatori/tecnici
+  SOLO    // operatore singolo (artigiano autonomo)
+}
+
 model Company {
-  id           String   @id @default(cuid())
+  id           String      @id @default(cuid())
   name         String
-  slug         String   @unique
-  email        String   @unique // login dell'azienda abbonata
-  passwordHash String   @map("password_hash")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+  slug         String      @unique
+  email        String      @unique // login dell'account
+  passwordHash String      @map("password_hash")
+  accountType  AccountType @default(COMPANY) @map("account_type")
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
 
   technicians Technician[]
   customers   Customer[]

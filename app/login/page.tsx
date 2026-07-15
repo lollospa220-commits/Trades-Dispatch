@@ -2,6 +2,7 @@ import LoginForm from '@/components/auth/LoginForm';
 import Logo from '@/components/brand/Logo';
 import { BRAND } from '@/lib/brand';
 import { getSession } from '@/lib/auth';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 export default async function LoginPage() {
@@ -19,11 +20,18 @@ export default async function LoginPage() {
 
         <LoginForm />
 
-        <p className="mt-8 text-center text-xs text-brand-muted">
-          Demo idraulica: <span className="font-mono text-brand-ink">admin@demo-idraulica.it</span> /{' '}
+        <p className="mt-8 text-center text-sm text-brand-muted">
+          Non hai un account?{' '}
+          <Link href="/register" className="font-semibold text-brand-blue hover:text-brand-blue-dark">
+            Registrati
+          </Link>
+        </p>
+
+        <p className="mt-4 text-center text-xs text-brand-muted">
+          Demo azienda: <span className="font-mono text-brand-ink">admin@demo-idraulica.it</span> /{' '}
           <span className="font-mono text-brand-ink">demo1234</span>
           <br />
-          Demo elettrica: <span className="font-mono text-brand-ink">admin@demo-elettrica.it</span> /{' '}
+          Demo operatore: <span className="font-mono text-brand-ink">marco@demo-solo.it</span> /{' '}
           <span className="font-mono text-brand-ink">demo1234</span>
         </p>
       </div>

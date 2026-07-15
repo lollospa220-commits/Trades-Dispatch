@@ -16,7 +16,7 @@ export default async function DashboardPage() {
 
   const company = await prisma.company.findUnique({
     where: { id: session.companyId },
-    select: { id: true, name: true },
+    select: { id: true, name: true, accountType: true },
   });
 
   if (!company) {
@@ -56,6 +56,9 @@ export default async function DashboardPage() {
     }),
   ]);
 
+  const isSolo = company.accountType === 'SOLO';
+  const accountLabel = isSolo ? 'Operatore singolo' : 'Azienda con team';
+
   const serializedJobs = jobs.map((j) => ({
     id: j.id,
     title: j.title,
@@ -82,7 +85,9 @@ export default async function DashboardPage() {
             <div className="hidden h-8 w-px bg-white/15 sm:block" aria-hidden />
             <div>
               <h1 className="font-display text-lg font-semibold">{company.name}</h1>
-              <p className="text-xs text-white/60">{session.email}</p>
+              <p className="text-xs text-white/60">
+                {session.email} · {accountLabel}
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -96,14 +101,18 @@ export default async function DashboardPage() {
       </header>
 
       <div className="mx-auto max-w-6xl px-4 py-8">
-        <CreateJobForm customers={customers} technicians={technicians} />
+        <CreateJobForm
+          customers={customers}
+          technicians={technicians}
+          isSolo={isSolo}
+        />
 
         <div className="mb-6">
           <h2 className="font-display text-lg font-semibold text-brand-navy">Interventi di oggi</h2>
           <p className="text-sm text-brand-muted">{VOICE.examples.smsStub}</p>
         </div>
 
-        <JobTable jobs={serializedJobs} technicians={technicians} />
+        <JobTable jobs={serializedJobs} technicians={technicians} isSolo={isSolo} />
       </div>
     </main>
   );

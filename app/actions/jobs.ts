@@ -13,11 +13,25 @@ export type CreateJobResult = ActionResult;
 const VALID_STATUSES: JobStatus[] = ['SCHEDULED', 'IN_PROGRESS', 'COMPLETED'];
 
 async function sessionOrError(): Promise<
-  { ok: true; companyId: string } | { ok: false; error: string }
+  | { ok: true; companyId: string; accountType: 'COMPANY' | 'SOLO' }
+  | { ok: false; error: string }
 > {
   const session = await getSession();
   if (!session) return { ok: false, error: 'Sessione scaduta. Effettua di nuovo il login.' };
-  return { ok: true, companyId: session.companyId };
+  return {
+    ok: true,
+    companyId: session.companyId,
+    accountType: session.accountType,
+  };
+}
+
+async function soloTechnicianId(companyId: string): Promise<string | null> {
+  const tech = await prisma.technician.findFirst({
+    where: { companyId, active: true },
+    orderBy: { createdAt: 'asc' },
+    select: { id: true },
+  });
+  return tech?.id ?? null;
 }
 
 async function jobInCompany(jobId: string, companyId: string) {
@@ -42,7 +56,10 @@ export async function createJob(
   const description = String(formData.get('description') || '').trim() || null;
   const date = String(formData.get('date') || '');
   const time = String(formData.get('time') || '');
-  const technicianId = String(formData.get('technicianId') || '').trim() || null;
+  let technicianId = String(formData.get('technicianId') || '').trim() || null;
+  if (auth.accountType === 'SOLO' && !technicianId) {
+    technicianId = await soloTechnicianId(auth.companyId);
+  }
   const isNewCustomer = formData.get('newCustomer') === '1';
 
   if (!title) return { ok: false, error: 'Il titolo è obbligatorio.' };

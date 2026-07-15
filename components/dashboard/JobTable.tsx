@@ -32,9 +32,11 @@ const STATUS_STYLE: Record<JobStatus, string> = {
 export default function JobTable({
   jobs,
   technicians,
+  isSolo = false,
 }: {
   jobs: DashboardJob[];
   technicians: TechnicianOption[];
+  isSolo?: boolean;
 }) {
   const [pending, startTransition] = useTransition();
 
@@ -67,7 +69,9 @@ export default function JobTable({
               <th className="px-4 py-3 font-semibold text-brand-muted">Orario</th>
               <th className="px-4 py-3 font-semibold text-brand-muted">Cliente</th>
               <th className="px-4 py-3 font-semibold text-brand-muted">Intervento</th>
-              <th className="px-4 py-3 font-semibold text-brand-muted">Tecnico</th>
+              {!isSolo && (
+                <th className="px-4 py-3 font-semibold text-brand-muted">Tecnico</th>
+              )}
               <th className="px-4 py-3 font-semibold text-brand-muted">Stato</th>
               <th className="px-4 py-3 font-semibold text-brand-muted">Azioni</th>
             </tr>
@@ -85,23 +89,25 @@ export default function JobTable({
                   )}
                 </td>
                 <td className="px-4 py-3 text-brand-ink">{job.title}</td>
-                <td className="px-4 py-3">
-                  <select
-                    className="brand-input min-w-[140px] py-1.5"
-                    value={job.technician?.id ?? ''}
-                    disabled={pending || job.status === 'COMPLETED'}
-                    onChange={(e) => {
-                      if (e.target.value) onAssign(job.id, e.target.value);
-                    }}
-                  >
-                    <option value="">— Assegna —</option>
-                    {technicians.map((t) => (
-                      <option key={t.id} value={t.id}>
-                        {t.name}
-                      </option>
-                    ))}
-                  </select>
-                </td>
+                {!isSolo && (
+                  <td className="px-4 py-3">
+                    <select
+                      className="brand-input min-w-[140px] py-1.5"
+                      value={job.technician?.id ?? ''}
+                      disabled={pending || job.status === 'COMPLETED'}
+                      onChange={(e) => {
+                        if (e.target.value) onAssign(job.id, e.target.value);
+                      }}
+                    >
+                      <option value="">— Assegna —</option>
+                      {technicians.map((t) => (
+                        <option key={t.id} value={t.id}>
+                          {t.name}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                )}
                 <td className="px-4 py-3">
                   <span
                     className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ring-inset ${STATUS_STYLE[job.status]}`}

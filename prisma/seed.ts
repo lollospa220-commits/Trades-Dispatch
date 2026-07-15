@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { AccountType, PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
@@ -19,6 +19,7 @@ async function seedCompany(data: {
   name: string;
   email: string;
   passwordHash: string;
+  accountType?: AccountType;
 }) {
   return prisma.company.upsert({
     where: { slug: data.slug },
@@ -26,6 +27,7 @@ async function seedCompany(data: {
       name: data.name,
       email: data.email,
       passwordHash: data.passwordHash,
+      accountType: data.accountType ?? 'COMPANY',
     },
     create: data,
   });
@@ -39,6 +41,7 @@ async function main() {
     name: 'Idraulica Rossi S.r.l.',
     email: 'admin@demo-idraulica.it',
     passwordHash,
+    accountType: 'COMPANY',
   });
 
   const elettrica = await seedCompany({
@@ -46,6 +49,58 @@ async function main() {
     name: 'Elettrica Blu S.r.l.',
     email: 'admin@demo-elettrica.it',
     passwordHash,
+    accountType: 'COMPANY',
+  });
+
+  const solo = await seedCompany({
+    slug: 'demo-solo-marco',
+    name: 'Idraulica Bianchi',
+    email: 'marco@demo-solo.it',
+    passwordHash,
+    accountType: 'SOLO',
+  });
+
+  const soloTech = await prisma.technician.upsert({
+    where: { id: 'seed-tech-solo-marco' },
+    update: { companyId: solo.id },
+    create: {
+      id: 'seed-tech-solo-marco',
+      name: 'Marco Bianchi',
+      phone: '+393339998877',
+      email: 'marco@demo-solo.it',
+      companyId: solo.id,
+    },
+  });
+
+  const soloCustomer = await prisma.customer.upsert({
+    where: { id: 'seed-customer-solo-0' },
+    update: { companyId: solo.id },
+    create: {
+      id: 'seed-customer-solo-0',
+      name: 'Laura Martini',
+      phone: '+393331112233',
+      address: 'Via Garibaldi 5, Milano',
+      companyId: solo.id,
+    },
+  });
+
+  await prisma.job.upsert({
+    where: { id: 'seed-job-solo-1' },
+    update: {
+      companyId: solo.id,
+      technicianId: soloTech.id,
+      scheduledAt: todayAtRome(10, 0),
+    },
+    create: {
+      id: 'seed-job-solo-1',
+      title: 'Riparazione rubinetto',
+      description: 'Intervento demo operatore singolo',
+      scheduledAt: todayAtRome(10, 0),
+      status: 'SCHEDULED',
+      companyId: solo.id,
+      customerId: soloCustomer.id,
+      technicianId: soloTech.id,
+    },
   });
 
   const [marco, luca] = await Promise.all([
@@ -149,8 +204,9 @@ async function main() {
   }
 
   console.log('Seed OK');
-  console.log('  Idraulica:', idraulica.email, '/', DEMO_PASSWORD);
-  console.log('  Elettrica:', elettrica.email, '/', DEMO_PASSWORD);
+  console.log('  Azienda idraulica:', idraulica.email, '/', DEMO_PASSWORD);
+  console.log('  Azienda elettrica:', elettrica.email, '/', DEMO_PASSWORD);
+  console.log('  Operatore singolo:', solo.email, '/', DEMO_PASSWORD);
 }
 
 main()

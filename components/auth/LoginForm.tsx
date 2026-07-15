@@ -12,14 +12,14 @@ export default function LoginForm() {
   return (
     <form action={formAction} className="brand-card p-6">
       <label className="block">
-        <span className="brand-label">Email azienda</span>
+        <span className="brand-label">Email</span>
         <input
           name="email"
           type="email"
           autoComplete="email"
           required
           className="brand-input mt-1.5"
-          placeholder="admin@tuaazienda.it"
+          placeholder="tu@email.it"
         />
       </label>
 

@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs';
+import { AccountType } from '@prisma/client';
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 
@@ -8,6 +9,7 @@ export type SessionPayload = {
   companyId: string;
   companyName: string;
   email: string;
+  accountType: AccountType;
 };
 
 function getSecret(): Uint8Array {
@@ -58,8 +60,9 @@ export async function getSession(): Promise<SessionPayload | null> {
     const companyId = String(payload.companyId || '');
     const companyName = String(payload.companyName || '');
     const email = String(payload.email || '');
+    const accountType = payload.accountType === 'SOLO' ? 'SOLO' : 'COMPANY';
     if (!companyId || !companyName || !email) return null;
-    return { companyId, companyName, email };
+    return { companyId, companyName, email, accountType };
   } catch {
     return null;
   }

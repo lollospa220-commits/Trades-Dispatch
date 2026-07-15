@@ -12,9 +12,11 @@ const initial: CreateJobResult | null = null;
 export default function CreateJobForm({
   customers,
   technicians,
+  isSolo = false,
 }: {
   customers: CustomerOption[];
   technicians: TechnicianOption[];
+  isSolo?: boolean;
 }) {
   const [state, formAction, pending] = useActionState(createJob, initial);
   const [newCustomer, setNewCustomer] = useState(false);
@@ -31,7 +33,9 @@ export default function CreateJobForm({
     <section className="brand-card mb-8 p-5">
       <h2 className="font-display text-base font-semibold text-brand-navy">Nuovo intervento</h2>
       <p className="mt-1 text-sm text-brand-muted">
-        Programma un intervento e assegnalo a un tecnico (opzionale).
+        {isSolo
+          ? 'Programma un intervento: verrà assegnato automaticamente a te.'
+          : 'Programma un intervento e assegnalo a un tecnico (opzionale).'}
       </p>
 
       <form action={formAction} className="mt-4 grid gap-4 lg:grid-cols-2">
@@ -87,23 +91,22 @@ export default function CreateJobForm({
           />
         </label>
 
-        <label className="block">
-          <span className="brand-label">
-            Tecnico (opzionale)
-          </span>
-          <select
-            name="technicianId"
-            defaultValue=""
-            className="brand-input mt-1.5"
-          >
-            <option value="">— Da assegnare —</option>
-            {technicians.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.name}
-              </option>
-            ))}
-          </select>
-        </label>
+        {!isSolo && (
+          <label className="block">
+            <span className="brand-label">Tecnico (opzionale)</span>
+            <select name="technicianId" defaultValue="" className="brand-input mt-1.5">
+              <option value="">— Da assegnare —</option>
+              {technicians.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
+        {isSolo && technicians[0] && (
+          <input type="hidden" name="technicianId" value={technicians[0].id} />
+        )}
 
         <div className="block">
           <div className="flex items-center justify-between">
