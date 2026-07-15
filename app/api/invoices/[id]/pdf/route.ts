@@ -1,4 +1,3 @@
-import { formatDateRome } from '@/lib/dates';
 import { getSession } from '@/lib/auth';
 import { invoiceNumberLabel } from '@/lib/invoices';
 import { prisma } from '@/lib/prisma';
@@ -21,6 +20,16 @@ function euro(cents: number): string {
 
 function qty(value: number): string {
   return String(value).replace('.', ',');
+}
+
+/** Data completa gg/mm/aaaa in Europe/Rome: in fattura serve l'anno. */
+function fullDate(instant: Date): string {
+  return new Intl.DateTimeFormat('it-IT', {
+    timeZone: 'Europe/Rome',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  }).format(instant);
 }
 
 export async function GET(
@@ -92,7 +101,7 @@ export async function GET(
     align: 'right',
   });
   y -= 16;
-  text(`Data emissione: ${formatDateRome(invoice.issueDate)}`, { size: 10, color: MUTED, align: 'right' });
+  text(`Data emissione: ${fullDate(invoice.issueDate)}`, { size: 10, color: MUTED, align: 'right' });
   y -= 26;
 
   text(issuerName, { size: 12, font: bold });
@@ -138,9 +147,9 @@ export async function GET(
   y -= 20;
   const cols = {
     desc: margin,
-    qty: margin + width * 0.58,
-    price: margin + width * 0.7,
-    vat: margin + width * 0.85,
+    qty: margin + width * 0.52,
+    price: margin + width * 0.62,
+    vat: margin + width * 0.78,
     total: pageSize[0] - margin,
   };
   hr();
@@ -156,7 +165,7 @@ export async function GET(
 
   for (const line of invoice.lines) {
     ensureSpace(30);
-    const desc = line.description.length > 58 ? `${line.description.slice(0, 57)}…` : line.description;
+    const desc = line.description.length > 48 ? `${line.description.slice(0, 47)}…` : line.description;
     text(desc, { size: 10 });
     text(qty(Number(line.quantity)), { x: cols.qty, size: 10 });
     text(euro(line.unitPriceCents), { size: 10, align: 'right', rightEdge: cols.vat - 14 });
