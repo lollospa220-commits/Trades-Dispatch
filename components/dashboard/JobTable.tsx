@@ -110,11 +110,13 @@ export default function JobTable({
   technicians,
   isSolo = false,
   showActions = false,
+  emptyCta,
 }: {
   jobs: DashboardJob[];
   technicians: TechnicianOption[];
   isSolo?: boolean;
   showActions?: boolean;
+  emptyCta?: { href: string; label: string };
 }) {
   const [pending, startTransition] = useTransition();
 
@@ -141,6 +143,11 @@ export default function JobTable({
     return (
       <div className="brand-card border-dashed px-4 py-12 text-center sm:px-6 sm:py-16">
         <p className="text-sm font-medium text-brand-muted">{VOICE.examples.emptyState}</p>
+        {emptyCta && (
+          <a href={emptyCta.href} className="brand-btn-primary mt-5 px-6">
+            {emptyCta.label}
+          </a>
+        )}
       </div>
     );
   }

@@ -30,7 +30,7 @@ export default function CreateJobForm({
   }).format(now);
 
   return (
-    <section className="brand-card mb-6 p-4 sm:mb-8 sm:p-5">
+    <section id="nuovo-intervento" className="brand-card mb-6 scroll-mt-24 p-4 sm:mb-8 sm:p-5">
       <h2 className="font-display text-base font-semibold text-brand-navy">Nuovo intervento</h2>
       <p className="mt-1 text-sm text-brand-muted">
         {isSolo

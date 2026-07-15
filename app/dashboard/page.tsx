@@ -116,7 +116,17 @@ export default async function DashboardPage({ searchParams }: PageProps) {
         <p className="mt-1 text-sm text-brand-muted">{VOICE.examples.smsStub}</p>
       </div>
 
-      <JobTable jobs={serializedJobs} technicians={technicians} isSolo={isSolo} showActions />
+      <JobTable
+        jobs={serializedJobs}
+        technicians={technicians}
+        isSolo={isSolo}
+        showActions
+        emptyCta={
+          view === 'history'
+            ? undefined
+            : { href: '#nuovo-intervento', label: 'Crea il primo intervento' }
+        }
+      />
     </>
   );
 }
