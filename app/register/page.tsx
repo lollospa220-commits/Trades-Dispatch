@@ -5,9 +5,17 @@ import { getSession } from '@/lib/auth';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-export default async function RegisterPage() {
+type RegisterPageProps = {
+  searchParams: Promise<{ plan?: string }>;
+};
+
+export default async function RegisterPage({ searchParams }: RegisterPageProps) {
   const session = await getSession();
   if (session) redirect('/dashboard');
+
+  const { plan } = await searchParams;
+  const defaultPlan =
+    plan === 'solo' ? 'SOLO' : plan === 'team' || plan === 'pro' ? 'COMPANY' : undefined;
 
   return (
     <main className="brand-hero-bg flex min-h-screen items-center justify-center px-4 py-12">
@@ -21,7 +29,7 @@ export default async function RegisterPage() {
           </p>
         </div>
 
-        <RegisterForm />
+        <RegisterForm defaultAccountType={defaultPlan} />
 
         <p className="mt-8 text-center text-sm text-brand-muted">
           Hai già un account?{' '}

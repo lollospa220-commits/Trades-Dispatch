@@ -20,9 +20,13 @@ const ACCOUNT_OPTIONS = [
   },
 ];
 
-export default function RegisterForm() {
+export default function RegisterForm({
+  defaultAccountType,
+}: {
+  defaultAccountType?: 'SOLO' | 'COMPANY';
+}) {
   const [state, formAction, pending] = useActionState(registerAction, initial);
-  const [accountType, setAccountType] = useState<AccountChoice>(null);
+  const [accountType, setAccountType] = useState<AccountChoice>(defaultAccountType ?? null);
 
   return (
     <form action={formAction} className="brand-card p-6">
@@ -46,6 +50,7 @@ export default function RegisterForm() {
                   value={opt.value}
                   required
                   className="sr-only"
+                  defaultChecked={defaultAccountType === opt.value}
                   onChange={() => setAccountType(opt.value)}
                 />
                 <span className="block font-display text-sm font-semibold text-brand-navy">
