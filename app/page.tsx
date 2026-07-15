@@ -25,10 +25,28 @@ export const metadata: Metadata = {
   title: { absolute: HOME_TITLE },
   description: HOME_DESCRIPTION,
   alternates: { canonical: '/' },
+  // Next non fonde openGraph tra layout e page: qui va l'oggetto completo
   openGraph: {
     title: HOME_TITLE,
     description: HOME_DESCRIPTION,
     url: '/',
+    type: 'website',
+    siteName: BRAND.name,
+    locale: 'it_IT',
+    images: [
+      {
+        url: '/brand/app-icon-1024.png',
+        width: 1024,
+        height: 1024,
+        alt: `${BRAND.name} — gestionale interventi per artigiani`,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary',
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
+    images: ['/brand/app-icon-1024.png'],
   },
 };
 
