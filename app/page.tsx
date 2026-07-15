@@ -12,14 +12,64 @@ import SolutionSection from '@/components/landing/SolutionSection';
 import TestimonialsSection from '@/components/landing/TestimonialsSection';
 import { BRAND } from '@/lib/brand';
 import { getSession } from '@/lib/auth';
+import { PRICING_PLANS } from '@/lib/pricing';
+import { siteUrl } from '@/lib/site';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
+const HOME_TITLE = `${BRAND.name} — Gestionale interventi per idraulici, elettricisti e artigiani`;
+const HOME_DESCRIPTION =
+  'Programma interventi, avvisa i clienti su WhatsApp, rapportino PDF con firma. Il gestionale per artigiani tecnici. Prova 14 giorni gratis.';
+
 export const metadata: Metadata = {
-  title: `${BRAND.name} — Gestionale per artigiani tecnici`,
-  description:
-    'Programma interventi, avvisa i clienti su WhatsApp, rapportino PDF con firma. Prova 14 giorni gratis.',
+  title: { absolute: HOME_TITLE },
+  description: HOME_DESCRIPTION,
+  alternates: { canonical: '/' },
+  openGraph: {
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
+    url: '/',
+  },
 };
+
+function StructuredData() {
+  const base = siteUrl();
+  const prices = PRICING_PLANS.map((p) => p.price);
+  const jsonLd = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: BRAND.name,
+      description: HOME_DESCRIPTION,
+      url: base,
+      applicationCategory: 'BusinessApplication',
+      operatingSystem: 'Web',
+      inLanguage: 'it',
+      offers: {
+        '@type': 'AggregateOffer',
+        priceCurrency: 'EUR',
+        lowPrice: Math.min(...prices),
+        highPrice: Math.max(...prices),
+        offerCount: PRICING_PLANS.length,
+      },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: BRAND.name,
+      url: base,
+      logo: `${base}/brand/app-icon-1024.png`,
+      slogan: BRAND.tagline,
+    },
+  ];
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
+  );
+}
 
 export default async function HomePage() {
   const session = await getSession();
@@ -27,6 +77,7 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen">
+      <StructuredData />
       <LandingNav />
       <main>
         <HeroSection />

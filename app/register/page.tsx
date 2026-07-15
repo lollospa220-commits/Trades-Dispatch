@@ -2,8 +2,16 @@ import RegisterForm from '@/components/auth/RegisterForm';
 import Logo from '@/components/brand/Logo';
 import { BRAND } from '@/lib/brand';
 import { getSession } from '@/lib/auth';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+
+export const metadata: Metadata = {
+  title: 'Registrati — prova 14 giorni gratis',
+  description:
+    'Crea il tuo account Opifice: programma interventi, avvisa i clienti su WhatsApp e firma i rapportini. 14 giorni di prova gratuita.',
+  alternates: { canonical: '/register' },
+};
 
 type RegisterPageProps = {
   searchParams: Promise<{ plan?: string }>;

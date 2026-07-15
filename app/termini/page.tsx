@@ -1,5 +1,13 @@
 import Logo from '@/components/brand/Logo';
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Termini di servizio',
+  description:
+    "Condizioni d'uso del gestionale Opifice: abbonamento mensile, responsabilità sui dati e disdetta.",
+  alternates: { canonical: '/termini' },
+};
 
 export default function TerminiPage() {
   return (

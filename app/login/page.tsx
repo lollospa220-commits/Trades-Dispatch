@@ -3,8 +3,15 @@ import Logo from '@/components/brand/Logo';
 import { BRAND } from '@/lib/brand';
 import { getSession } from '@/lib/auth';
 import { isProduction } from '@/lib/site';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+
+export const metadata: Metadata = {
+  title: 'Accedi',
+  description: 'Entra nella dashboard Opifice: agenda interventi, clienti e rapportini della tua attività.',
+  alternates: { canonical: '/login' },
+};
 
 export default async function LoginPage() {
   const session = await getSession();

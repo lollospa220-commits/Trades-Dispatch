@@ -1,5 +1,13 @@
 import Logo from '@/components/brand/Logo';
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy',
+  description:
+    'Come Opifice tratta i dati di aziende, clienti e interventi: conservazione in UE, nessuna vendita a terzi.',
+  alternates: { canonical: '/privacy' },
+};
 
 export default function PrivacyPage() {
   return (

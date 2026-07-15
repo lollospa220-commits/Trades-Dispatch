@@ -21,11 +21,20 @@ const sourceSans = Source_Sans_3({
 
 export const metadata: Metadata = {
   title: {
-    default: BRAND.name,
+    default: `${BRAND.name} — ${BRAND.tagline}`,
     template: `%s · ${BRAND.name}`,
   },
   description: BRAND.descriptor,
   applicationName: BRAND.name,
+  keywords: [
+    'gestionale artigiani',
+    'programma interventi',
+    'gestionale idraulici',
+    'gestionale elettricisti',
+    'agenda interventi',
+    'avviso WhatsApp cliente',
+    'rapportino di intervento',
+  ],
   icons: {
     icon: [
       { url: '/brand/app-icon-32.png', sizes: '32x32', type: 'image/png' },
@@ -36,9 +45,26 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   metadataBase: new URL(siteUrl()),
   openGraph: {
-    title: BRAND.name,
+    title: `${BRAND.name} — ${BRAND.tagline}`,
     description: BRAND.descriptor,
     type: 'website',
+    siteName: BRAND.name,
+    locale: 'it_IT',
+    url: '/',
+    images: [
+      {
+        url: '/brand/app-icon-1024.png',
+        width: 1024,
+        height: 1024,
+        alt: `${BRAND.name} — gestionale interventi per artigiani`,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary',
+    title: `${BRAND.name} — ${BRAND.tagline}`,
+    description: BRAND.descriptor,
+    images: ['/brand/app-icon-1024.png'],
   },
 };
 
