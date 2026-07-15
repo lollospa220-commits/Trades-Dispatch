@@ -22,11 +22,14 @@ export default function LandingNav() {
         </Link>
 
         <nav className="hidden items-center gap-4 md:flex">
-          <a
-            href="#prezzi"
-            className="text-sm font-medium text-white/70 transition hover:text-white"
-          >
+          <a href="#prodotto" className="text-sm font-medium text-white/70 transition hover:text-white">
+            Prodotto
+          </a>
+          <a href="#prezzi" className="text-sm font-medium text-white/70 transition hover:text-white">
             Prezzi
+          </a>
+          <a href="#faq" className="hidden text-sm font-medium text-white/70 transition hover:text-white sm:inline">
+            FAQ
           </a>
           <Link
             href="/login"
@@ -65,12 +68,14 @@ export default function LandingNav() {
           className="border-t border-white/10 bg-brand-navy px-4 py-4 md:hidden"
         >
           <nav className="flex flex-col gap-2">
-            <a
-              href="#prezzi"
-              className="rounded-lg px-3 py-3 text-base font-medium text-white/90 transition hover:bg-white/10"
-              onClick={() => setOpen(false)}
-            >
+            <a href="#prodotto" className="rounded-lg px-3 py-3 text-base font-medium text-white/90 transition hover:bg-white/10" onClick={() => setOpen(false)}>
+              Prodotto
+            </a>
+            <a href="#prezzi" className="rounded-lg px-3 py-3 text-base font-medium text-white/90 transition hover:bg-white/10" onClick={() => setOpen(false)}>
               Prezzi
+            </a>
+            <a href="#faq" className="rounded-lg px-3 py-3 text-base font-medium text-white/90 transition hover:bg-white/10" onClick={() => setOpen(false)}>
+              FAQ
             </a>
             <Link
               href="/login"

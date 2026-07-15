@@ -1,6 +1,8 @@
 /**
- * Notifiche al cliente finale — Twilio se configurato, altrimenti log (dev).
+ * Notifiche cliente e tecnico — WhatsApp prima, SMS Twilio come backup.
  */
+
+import { sendWhatsAppText } from '@/lib/whatsapp';
 
 export type TechnicianEnRoutePayload = {
   to: string;
@@ -24,13 +26,18 @@ function normalizePhoneE164(raw: string): string {
   return `+${digits}`;
 }
 
-async function sendSms(to: string, body: string): Promise<boolean> {
+async function sendMessage(to: string, body: string): Promise<void> {
+  const wa = await sendWhatsAppText(to, body);
+  if (wa) return;
+  await sendSmsFallback(to, body);
+}
+
+async function sendSmsFallback(to: string, body: string): Promise<boolean> {
   const sid = process.env.TWILIO_ACCOUNT_SID;
   const token = process.env.TWILIO_AUTH_TOKEN;
   const from = process.env.TWILIO_PHONE_NUMBER;
-
   if (!sid || !token || !from) {
-    console.info('[sendSms stub]', { to, body });
+    console.info('[notify stub]', { to, body });
     return false;
   }
 
@@ -47,21 +54,18 @@ async function sendSms(to: string, body: string): Promise<boolean> {
     body: params.toString(),
   });
 
-  if (!res.ok) {
-    console.error('[sendSms]', await res.text());
-    return false;
-  }
-  return true;
+  if (!res.ok) console.error('[sendSms]', await res.text());
+  return res.ok;
 }
 
 export async function sendTechnicianEnRouteSms(payload: TechnicianEnRoutePayload): Promise<void> {
   const body = `Ciao ${payload.customerName}, ${payload.technicianName} è in partenza per: ${payload.jobTitle}. — Trades Dispatch`;
-  await sendSms(payload.to, body);
+  await sendMessage(payload.to, body);
 }
 
 export async function sendJobReminderSms(payload: JobReminderPayload): Promise<void> {
-  const body = `Promemoria: domani ${payload.scheduledLabel} intervento "${payload.jobTitle}" per ${payload.customerName}. — Trades Dispatch`;
-  await sendSms(payload.to, body);
+  const body = `Promemoria: domani alle ${payload.scheduledLabel} — intervento "${payload.jobTitle}". — Trades Dispatch`;
+  await sendMessage(payload.to, body);
 }
 
 export async function sendTechnicianAssignedSms(
@@ -71,5 +75,5 @@ export async function sendTechnicianAssignedSms(
   scheduledLabel: string,
 ): Promise<void> {
   const body = `${technicianName}, nuovo intervento: ${jobTitle} — ${scheduledLabel}. — Trades Dispatch`;
-  await sendSms(to, body);
+  await sendMessage(to, body);
 }

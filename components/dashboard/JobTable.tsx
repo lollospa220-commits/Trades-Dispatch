@@ -194,7 +194,13 @@ export default function JobTable({
             </div>
 
             {showActions && (
-              <div className="mt-4 flex gap-2">
+              <div className="mt-4 flex flex-wrap gap-2">
+                <Link
+                  href={`/dashboard/jobs/${job.id}/report`}
+                  className="rounded-lg border border-brand-teal/40 bg-brand-teal-light px-3 py-2 text-xs font-semibold text-brand-teal"
+                >
+                  Rapportino
+                </Link>
                 <Link
                   href={`/dashboard/jobs/${job.id}/edit`}
                   className="brand-btn-primary flex-1 py-2 text-center text-xs"
@@ -270,6 +276,12 @@ export default function JobTable({
                     />
                     {showActions && (
                       <>
+                        <Link
+                          href={`/dashboard/jobs/${job.id}/report`}
+                          className="text-xs font-semibold text-brand-teal hover:underline"
+                        >
+                          Rapportino
+                        </Link>
                         <Link
                           href={`/dashboard/jobs/${job.id}/edit`}
                           className="text-xs font-semibold text-brand-blue hover:underline"

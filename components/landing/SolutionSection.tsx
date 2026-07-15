@@ -24,8 +24,9 @@ export default function SolutionSection() {
                 sizes="(max-width: 1024px) 100vw, 400px"
               />
             </div>
-            <div className="absolute -bottom-4 left-4 right-4 rounded-xl bg-brand-teal-light px-4 py-3 text-center text-sm font-semibold text-brand-teal shadow-md ring-1 ring-brand-teal/20">
-              SMS inviato · Cliente avvisato
+            <div className="absolute -bottom-4 left-4 right-4 flex items-center justify-center gap-2 rounded-xl bg-brand-teal-light px-4 py-3 text-center text-sm font-semibold text-brand-teal shadow-md ring-1 ring-brand-teal/20">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#25D366] text-[9px] font-bold text-white">WA</span>
+              WhatsApp inviato · Cliente avvisato
             </div>
           </div>
 

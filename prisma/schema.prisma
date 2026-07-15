@@ -46,6 +46,7 @@ model Company {
   technicians          Technician[]
   customers            Customer[]
   jobs                 Job[]
+  jobReports           JobReport[]
   passwordResetTokens  PasswordResetToken[]
 
   @@map("companies")
@@ -127,8 +128,27 @@ model Job {
   company    Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
   customer   Customer    @relation(fields: [customerId], references: [id], onDelete: Restrict)
   technician Technician? @relation(fields: [technicianId], references: [id], onDelete: SetNull)
+  report     JobReport?
 
   @@index([companyId, scheduledAt])
   @@index([technicianId])
   @@map("jobs")
+}
+
+model JobReport {
+  id            String   @id @default(cuid())
+  jobId         String   @unique @map("job_id")
+  companyId     String   @map("company_id")
+  workNotes     String?  @map("work_notes")
+  signatureData String?  @map("signature_data") @db.Text
+  signedByName  String?  @map("signed_by_name")
+  photoData     String?  @map("photo_data") @db.Text
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  job     Job     @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@map("job_reports")
 }

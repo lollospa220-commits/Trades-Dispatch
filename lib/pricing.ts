@@ -3,6 +3,7 @@ export type PricingPlan = {
   name: string;
   tagline: string;
   price: number;
+  annualPrice: number;
   period: string;
   highlight?: boolean;
   badge?: string;
@@ -17,15 +18,16 @@ export const PRICING_PLANS: PricingPlan[] = [
     name: 'Solo',
     tagline: 'Tutto il necessario per partire',
     price: 20,
+    annualPrice: 200,
     period: 'mese',
-    audience: 'Per l\'artigiano che lavora da solo e vuole smettere di gestire tutto da WhatsApp.',
+    audience: 'Per l\'artigiano che lavora da solo.',
     features: [
       '1 operatore (tu)',
-      'Interventi e clienti illimitati',
-      'Agenda giornaliera chiara',
-      'Notifica SMS al cliente (in partenza)',
-      'Accesso da telefono e PC',
-      'Nessun vincolo — disdici quando vuoi',
+      'Agenda oggi, settimana e storico',
+      'Avviso WhatsApp al cliente in partenza',
+      'Rubrica clienti illimitata',
+      'Rapportino PDF con firma cliente',
+      'Prova 14 giorni — disdici quando vuoi',
     ],
     cta: 'Inizia con Solo',
   },
@@ -34,17 +36,18 @@ export const PRICING_PLANS: PricingPlan[] = [
     name: 'Team',
     tagline: 'Per chi ha più richieste o un piccolo gruppo',
     price: 49,
+    annualPrice: 490,
     period: 'mese',
     highlight: true,
     badge: 'Più scelto',
-    audience: 'Per artigiani con molte chiamate o piccole imprese fino a 5 operatori.',
+    audience: 'Piccole imprese fino a 5 operatori.',
     features: [
-      'Fino a 5 operatori',
-      'Assegnazione interventi al team',
-      'Vista unica di tutti gli interventi',
+      'Fino a 5 tecnici',
+      'Assegnazione + avviso WhatsApp al tecnico',
+      'Vista team su tutti gli interventi',
       'Tutto del piano Solo',
-      'Supporto prioritario via email',
-      'Multi-tenant: ogni azienda isolata',
+      'Foto lavoro sul rapportino',
+      'Supporto via WhatsApp ed email',
     ],
     cta: 'Scegli Team',
   },
@@ -53,15 +56,16 @@ export const PRICING_PLANS: PricingPlan[] = [
     name: 'Pro',
     tagline: 'Controllo totale per chi scala',
     price: 69,
+    annualPrice: 690,
     period: 'mese',
-    audience: 'Per imprese strutturate, più squadre o chi vuole il massimo controllo operativo.',
+    audience: 'Imprese strutturate con più squadre.',
     features: [
       'Operatori illimitati',
-      'Gestione multi-sede (in arrivo)',
-      'Report e storico avanzato (in arrivo)',
+      'Storico completo ed export CSV',
+      'Rapportini illimitati con foto',
       'Tutto del piano Team',
       'Onboarding dedicato',
-      'Priorità su nuove funzioni',
+      'Priorità integrazioni (fatturazione elettronica)',
     ],
     cta: 'Passa a Pro',
   },
@@ -72,3 +76,5 @@ export const PRICE_ANCHOR = {
   monthlyCoffee: 3,
   headline: 'Meno di un caffè al giorno. Molto meno di un intervento perso.',
 };
+
+export const ANNUAL_SAVINGS_MONTHS = 2;

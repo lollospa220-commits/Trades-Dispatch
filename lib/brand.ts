@@ -56,6 +56,6 @@ export const VOICE = {
     ctaPrimary: 'Crea intervento',
     ctaLogin: 'Entra in dashboard',
     emptyState: 'Nessun intervento oggi. Programma il primo.',
-    smsStub: 'Il tecnico è in partenza — il cliente lo sa subito.',
+    smsStub: 'In partenza → messaggio WhatsApp al cliente automatico.',
   },
 } as const;
