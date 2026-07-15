@@ -19,8 +19,8 @@ export default function SolutionSection() {
           <div className="relative lg:col-span-2">
             <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-xl ring-1 ring-brand-sand-dark">
               <LandingImage
-                src={LANDING_IMAGES.electrician.src}
-                alt={LANDING_IMAGES.electrician.alt}
+                src={LANDING_IMAGES.blueprint.src}
+                alt={LANDING_IMAGES.blueprint.alt}
                 sizes="(max-width: 1024px) 100vw, 400px"
               />
             </div>

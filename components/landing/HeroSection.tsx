@@ -1,6 +1,6 @@
 import LandingImage from '@/components/landing/LandingImage';
 import { LANDING } from '@/lib/landing';
-import { LANDING_IMAGES } from '@/lib/landing-images';
+import { HERO_AVATARS, LANDING_IMAGES } from '@/lib/landing-images';
 import Link from 'next/link';
 
 export default function HeroSection() {
@@ -93,8 +93,7 @@ export default function HeroSection() {
 
           {/* Small avatar strip */}
           <div className="absolute -right-2 top-6 z-10 flex -space-x-2 sm:right-4">
-            {[LANDING_IMAGES.solo, LANDING_IMAGES.electrician, LANDING_IMAGES.plumber].map(
-              (img, i) => (
+            {HERO_AVATARS.map((img, i) => (
                 <div
                   key={img.src}
                   className="relative h-11 w-11 overflow-hidden rounded-full ring-2 ring-brand-navy"

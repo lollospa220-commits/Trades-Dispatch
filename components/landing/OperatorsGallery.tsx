@@ -1,12 +1,5 @@
 import LandingImage from '@/components/landing/LandingImage';
-import { LANDING_IMAGES } from '@/lib/landing-images';
-
-const GALLERY = [
-  { ...LANDING_IMAGES.solo, role: 'Idraulico', caption: 'Gestisce tutto da solo' },
-  { ...LANDING_IMAGES.electrician, role: 'Elettricista', caption: 'Interventi in giornata' },
-  { ...LANDING_IMAGES.plumber, role: 'Termoidraulico', caption: 'Sotto casa, sopra l\'agenda' },
-  { ...LANDING_IMAGES.team, role: 'Team 5 persone', caption: 'Tutti sincronizzati' },
-];
+import { GALLERY_ITEMS } from '@/lib/landing-images';
 
 export default function OperatorsGallery() {
   return (
@@ -20,7 +13,7 @@ export default function OperatorsGallery() {
         </h2>
 
         <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-          {GALLERY.map((item) => (
+          {GALLERY_ITEMS.map((item) => (
             <figure
               key={item.src}
               className="group relative aspect-[3/4] overflow-hidden rounded-2xl shadow-md ring-1 ring-brand-sand-dark"

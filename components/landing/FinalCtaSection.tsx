@@ -11,8 +11,8 @@ export default function FinalCtaSection() {
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 lg:grid-cols-2">
         <div className="relative order-2 aspect-[16/11] overflow-hidden rounded-3xl shadow-2xl ring-1 ring-brand-sand-dark lg:order-1">
           <LandingImage
-            src={LANDING_IMAGES.team.src}
-            alt={LANDING_IMAGES.team.alt}
+            src={LANDING_IMAGES.dispatchStreet.src}
+            alt={LANDING_IMAGES.dispatchStreet.alt}
             sizes="(max-width: 1024px) 100vw, 50vw"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-brand-navy/30 to-transparent" />

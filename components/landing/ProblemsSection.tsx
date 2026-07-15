@@ -56,11 +56,18 @@ export default function ProblemsSection() {
             <div className="absolute -bottom-5 -right-4 w-2/5 overflow-hidden rounded-2xl shadow-lg ring-4 ring-brand-sand sm:-right-8">
               <div className="relative aspect-square">
                 <LandingImage
-                  src={LANDING_IMAGES.solo.src}
-                  alt=""
+                  src={LANDING_IMAGES.wiresCloseup.src}
+                  alt={LANDING_IMAGES.wiresCloseup.alt}
                   sizes="200px"
                 />
               </div>
+            </div>
+            <div className="absolute -top-4 right-6 h-20 w-20 overflow-hidden rounded-2xl shadow-md ring-2 ring-white sm:h-24 sm:w-24">
+              <LandingImage
+                src={LANDING_IMAGES.womanPlumber.src}
+                alt=""
+                sizes="96px"
+              />
             </div>
             <div className="absolute -left-3 top-8 max-w-[200px] rounded-xl bg-white px-4 py-3 shadow-lg ring-1 ring-brand-sand-dark sm:-left-6">
               <p className="text-xs font-semibold text-brand-amber">Prima</p>
