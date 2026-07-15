@@ -18,6 +18,13 @@ enum JobStatus {
   COMPLETED
 }
 
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  CANCELLED
+}
+
 enum AccountType {
   COMPANY
   SOLO
@@ -48,8 +55,29 @@ model Company {
   jobs                 Job[]
   jobReports           JobReport[]
   passwordResetTokens  PasswordResetToken[]
+  billingProfile       CompanyProfile?
+  invoices             Invoice[]
 
   @@map("companies")
+}
+
+// Dati fiscali dell'azienda emittente — intestazione delle fatture.
+model CompanyProfile {
+  id           String   @id @default(cuid())
+  companyId    String   @unique @map("company_id")
+  businessName String?  @map("business_name")
+  vatNumber    String?  @map("vat_number")
+  taxCode      String?  @map("tax_code")
+  address      String?
+  pec          String?
+  sdiCode      String?  @map("sdi_code")
+  iban         String?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@map("company_profiles")
 }
 
 model PasswordResetToken {
@@ -100,12 +128,17 @@ model Customer {
   phone     String?
   email     String?
   address   String?
+  vatNumber String?  @map("vat_number")
+  taxCode   String?  @map("tax_code")
+  sdiCode   String?  @map("sdi_code")
+  pec       String?
   companyId String   @map("company_id")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  jobs    Job[]
+  company  Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  jobs     Job[]
+  invoices Invoice[]
 
   @@index([companyId])
   @@map("customers")
@@ -129,10 +162,58 @@ model Job {
   customer   Customer    @relation(fields: [customerId], references: [id], onDelete: Restrict)
   technician Technician? @relation(fields: [technicianId], references: [id], onDelete: SetNull)
   report     JobReport?
+  invoices   Invoice[]
 
   @@index([companyId, scheduledAt])
   @@index([technicianId])
   @@map("jobs")
+}
+
+// Fattura interna (PDF + tracciamento, nessun invio SDI in v1).
+// Importi in centesimi di euro: niente float, serializzazione pulita verso i client component.
+model Invoice {
+  id            String        @id @default(cuid())
+  companyId     String        @map("company_id")
+  customerId    String        @map("customer_id")
+  jobId         String?       @map("job_id")
+  year          Int
+  number        Int
+  status        InvoiceStatus @default(DRAFT)
+  issueDate     DateTime      @map("issue_date")
+  notes         String?
+  subtotalCents Int           @map("subtotal_cents")
+  vatCents      Int           @map("vat_cents")
+  totalCents    Int           @map("total_cents")
+  sentAt        DateTime?     @map("sent_at")
+  paidAt        DateTime?     @map("paid_at")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  company  Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  customer Customer      @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  job      Job?          @relation(fields: [jobId], references: [id], onDelete: SetNull)
+  lines    InvoiceLine[]
+
+  @@unique([companyId, year, number])
+  @@index([companyId, status])
+  @@index([companyId, issueDate])
+  @@map("invoices")
+}
+
+model InvoiceLine {
+  id             String  @id @default(cuid())
+  invoiceId      String  @map("invoice_id")
+  description    String
+  quantity       Decimal @db.Decimal(10, 2)
+  unitPriceCents Int     @map("unit_price_cents")
+  vatRate        Int     @map("vat_rate") // 22 | 10 | 4 | 0
+  totalCents     Int     @map("total_cents") // imponibile riga già arrotondato
+  position       Int     @default(0)
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId])
+  @@map("invoice_lines")
 }
 
 model JobReport {

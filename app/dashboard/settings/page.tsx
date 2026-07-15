@@ -1,4 +1,5 @@
 import { startCheckoutForm } from '@/app/actions/billing';
+import BillingProfileForm from '@/components/dashboard/BillingProfileForm';
 import { PLAN_LIMITS } from '@/lib/plans';
 import { stripeConfigured } from '@/lib/stripe';
 import { getSession } from '@/lib/auth';
@@ -18,7 +19,23 @@ export default async function SettingsPage({
   const params = await searchParams;
   const company = await prisma.company.findUnique({
     where: { id: session.companyId },
-    select: { plan: true, subscriptionStatus: true, accountType: true },
+    select: {
+      name: true,
+      plan: true,
+      subscriptionStatus: true,
+      accountType: true,
+      billingProfile: {
+        select: {
+          businessName: true,
+          vatNumber: true,
+          taxCode: true,
+          address: true,
+          pec: true,
+          sdiCode: true,
+          iban: true,
+        },
+      },
+    },
   });
   if (!company) return null;
 
@@ -84,6 +101,8 @@ export default async function SettingsPage({
           );
         })}
       </div>
+
+      <BillingProfileForm profile={company.billingProfile} companyName={company.name} />
 
       <div className="mt-8 text-sm text-brand-muted">
         <p>

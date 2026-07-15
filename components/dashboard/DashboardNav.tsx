@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 
 const LINKS = [
   { href: '/dashboard', label: 'Agenda', match: (p: string) => p === '/dashboard' },
+  { href: '/dashboard/invoices', label: 'Fatture', match: (p: string) => p.startsWith('/dashboard/invoices') },
   { href: '/dashboard/customers', label: 'Clienti', match: (p: string) => p.startsWith('/dashboard/customers') },
   { href: '/dashboard/technicians', label: 'Tecnici', match: (p: string) => p.startsWith('/dashboard/technicians') },
   { href: '/dashboard/settings', label: 'Impostazioni', match: (p: string) => p.startsWith('/dashboard/settings') },
